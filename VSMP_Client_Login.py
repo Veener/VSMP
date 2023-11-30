@@ -1,5 +1,6 @@
 import tkinter as tk 
 import tkinter.ttk as ttk
+from VSMP_Client import VSMPClient 
 
 class VSMP_Login(tk.Tk):
     def __init__(self):
@@ -30,7 +31,7 @@ class VSMP_Login(tk.Tk):
         self.key_text=tk.Label(master=self.loginFrame, text="Key:", bg="pink",)
         self.key_input=tk.Entry(master=self.loginFrame,)
 
-        self.login_button=tk.Button(master=self.loginFrame, text="Login")
+        self.login_button=tk.Button(master=self.loginFrame, text="Login", command=lambda: self.login())
 
         self.loginFrame.pack(padx=25, pady=25, fill=tk.BOTH)
 
@@ -39,6 +40,12 @@ class VSMP_Login(tk.Tk):
         self.key_text.grid(row=1, column=0)
         self.key_input.grid(row=1, column=1, columnspan=2)
         self.login_button.grid(row=2, column=1, columnspan=2)
+    def login(self):
+        self.username=self.username_input.get()
+        self.key=self.key_input.get()
+        VSMPClient(self.username, self.key)
+        self.destroy()
+        
         
 if __name__ == "__main__":
     go = VSMP_Login()

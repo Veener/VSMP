@@ -1,8 +1,8 @@
 import tkinter as tk 
 import tkinter.ttk as ttk
 
-class VSMP_Client(tk.Tk):
-    def __init__(self):
+class VSMPClient(tk.Tk):
+    def __init__(self, username, key):
             super().__init__()
             self.title("VSMP")
             #self.iconbitmap("D:/SpaceShuttle.ico")
@@ -10,7 +10,8 @@ class VSMP_Client(tk.Tk):
             self.style=ttk.Style(self)
             self.style.configure("TButton", font=("Helvetica", 24))
 
-
+            self.username=username
+            self.key=key
 
             ww = 600
             wh = 625
@@ -50,10 +51,10 @@ class VSMP_Client(tk.Tk):
     def getText(self):
         send_this=self.message.get("1.0", tk.END)
         self.message.delete("1.0", tk.END)
-        self.text_insert(self.message_log, "\nUSERNAME: "+send_this)
+        self.text_insert(self.message_log, "\n"+self.username+": "+send_this)
         self.text_insert(self.message_log, "_____________________")
         print(send_this)
 
 if __name__ == "__main__":
-    vsmp = VSMP_Client()
+    vsmp = VSMPClient()
     vsmp.mainloop()
