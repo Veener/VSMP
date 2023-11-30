@@ -16,7 +16,7 @@ class VSMPClient(tk.Tk):
 
             self.username=username
             self.keyWord=keyWord
-            self.fkey=self.gen_key(self.keyWord)
+            self.fkey=0
 
             ww = 600
             wh = 625
@@ -66,20 +66,22 @@ class VSMPClient(tk.Tk):
         print("dec: "+str(self.decrypt(send_this)))
         
     def gen_key(self, keyword):
-        keyword_bytes = keyword.encode('utf-8')
-        key_bytes = hashlib.sha256(keyword_bytes).digest()[:32]
-        key = base64.urlsafe_b64encode(key_bytes)
-        fkey = Fernet(key)
-        self.fkey2=fkey
-        return fkey
+        if not self.fkey:
+            keyword_bytes = keyword.encode('utf-8')
+            key_bytes = hashlib.sha256(keyword_bytes).digest()[:32]
+            key = base64.urlsafe_b64encode(key_bytes)
+            self.fkey = Fernet(key)
+        return self.fkey
     
     def encrypt(self, message):
-        encMessage = self.fkey.encrypt(message.encode())
-        print(self.fkey2.decrypt(encMessage).decode())
+        fkey=self.gen_key(self.keyWord)
+        encMessage = fkey.encrypt(message.encode())
+        #print(self.fkey.decrypt(encMessage).decode())
         return encMessage
     
     def decrypt(self, encMessage):
-        message = self.fkey.decrypt(encMessage).decode()
+        fkey=self.gen_key(self.keyWord)
+        message = fkey.decrypt(encMessage).decode()
         return message
     
 
