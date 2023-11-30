@@ -16,6 +16,7 @@ class VSMPClient(tk.Tk):
 
             self.username=username
             self.keyWord=keyWord
+            self.fkey=self.gen_key(self.keyWord)
 
             ww = 600
             wh = 625
@@ -55,32 +56,30 @@ class VSMPClient(tk.Tk):
     def getText(self):
         send_this=self.message.get("1.0", tk.END)
         self.message.delete("1.0", tk.END)
-        print("enc: "+str(self.encrypt(send_this, self.keyWord)))
-        self.sendText(str(self.encrypt(send_this, self.keyWord)))
+        print("enc: "+str(self.encrypt(send_this)))
+        self.sendText(str(self.encrypt(send_this)))
     
     def sendText(self, send_this):
         self.text_insert(self.message_log, "\n_____________________")
-        self.text_insert(self.message_log, "\n"+self.username+": "+ self.decrypt(send_this, self.keyWord))
+        self.text_insert(self.message_log, "\n"+self.username+": "+ self.decrypt(send_this))
         self.text_insert(self.message_log, "\n_____________________")
-        print("dec: "+str(self.decrypt(send_this, self.keyWord)))
+        print("dec: "+str(self.decrypt(send_this)))
         
     def gen_key(self, keyword):
         keyword_bytes = keyword.encode('utf-8')
         key_bytes = hashlib.sha256(keyword_bytes).digest()[:32]
         key = base64.urlsafe_b64encode(key_bytes)
         fkey = Fernet(key)
-        self.fkey=fkey
+        self.fkey2=fkey
         return fkey
     
-    def encrypt(self, message, key):
-        fernet=self.gen_key(key)
-        encMessage = fernet.encrypt(message.encode())
+    def encrypt(self, message):
+        encMessage = self.fkey.encrypt(message.encode())
+        print(self.fkey2.decrypt(encMessage).decode())
         return encMessage
     
-    def decrypt(self, encMessage, key):
-        fernet=self.gen_key(key)
-        print(fernet)
-        message = fernet.decrypt(encMessage).decode()
+    def decrypt(self, encMessage):
+        message = self.fkey.decrypt(encMessage).decode()
         return message
     
 
