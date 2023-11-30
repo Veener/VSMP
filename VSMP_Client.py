@@ -1,8 +1,12 @@
 import tkinter as tk 
 import tkinter.ttk as ttk
 
+from cryptography.fernet import Fernet  
+import hashlib
+import base64
+
 class VSMPClient(tk.Tk):
-    def __init__(self, username, key):
+    def __init__(self, username, keyWord):
             super().__init__()
             self.title("VSMP")
             #self.iconbitmap("D:/SpaceShuttle.ico")
@@ -11,7 +15,7 @@ class VSMPClient(tk.Tk):
             self.style.configure("TButton", font=("Helvetica", 24))
 
             self.username=username
-            self.key=key
+            self.keyWord=keyWord
 
             ww = 600
             wh = 625
@@ -45,16 +49,41 @@ class VSMPClient(tk.Tk):
 
     def text_insert(self, textBox, insertmessage):
         textBox.config(state=tk.NORMAL)
-        textBox.insert(tk.END, insertmessage)
+        textBox.insert(tk.END,insertmessage)
         textBox.config(state=tk.DISABLED)
 
     def getText(self):
         send_this=self.message.get("1.0", tk.END)
         self.message.delete("1.0", tk.END)
-        self.text_insert(self.message_log, "\n"+self.username+": "+send_this)
-        self.text_insert(self.message_log, "_____________________")
-        print(send_this)
+        print("enc: "+str(self.encrypt(send_this, self.keyWord)))
+        self.sendText(str(self.encrypt(send_this, self.keyWord)))
+    
+    def sendText(self, send_this):
+        self.text_insert(self.message_log, "\n_____________________")
+        self.text_insert(self.message_log, "\n"+self.username+": "+ self.decrypt(send_this, self.keyWord))
+        self.text_insert(self.message_log, "\n_____________________")
+        print("dec: "+str(self.decrypt(send_this, self.keyWord)))
+        
+    def gen_key(self, keyword):
+        keyword_bytes = keyword.encode('utf-8')
+        key_bytes = hashlib.sha256(keyword_bytes).digest()[:32]
+        key = base64.urlsafe_b64encode(key_bytes)
+        fkey = Fernet(key)
+        self.fkey=fkey
+        return fkey
+    
+    def encrypt(self, message, key):
+        fernet=self.gen_key(key)
+        encMessage = fernet.encrypt(message.encode())
+        return encMessage
+    
+    def decrypt(self, encMessage, key):
+        fernet=self.gen_key(key)
+        print(fernet)
+        message = fernet.decrypt(encMessage).decode()
+        return message
+    
 
 if __name__ == "__main__":
-    vsmp = VSMPClient()
+    vsmp = VSMPClient("Vinny","Banana")
     vsmp.mainloop()
