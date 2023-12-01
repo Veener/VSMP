@@ -48,9 +48,11 @@ class VSMPClient(tk.Tk):
         self.message.grid(column=0, row=2,)
         self.send.grid(column=0, row=3, sticky=tk.S, pady=15)
 
-    def text_insert(self, textBox, insertmessage):
+    def text_insert(self, textBox, insertmessage, side="L"):
+        if side=="R":
+            self.message_log.tag_configure(side, justify="right")
         textBox.config(state=tk.NORMAL)
-        textBox.insert(tk.END,insertmessage)
+        textBox.insert(tk.END,insertmessage, side)
         textBox.config(state=tk.DISABLED)
 
     def getText(self):
@@ -60,6 +62,7 @@ class VSMPClient(tk.Tk):
     
     def send_text(self, encMessage):
         #Sending code here
+        self.printText(self.decrypt(encMessage), "R")
         print("enc: "+str(encMessage))
         self.recieve_text(encMessage)
         
@@ -68,12 +71,19 @@ class VSMPClient(tk.Tk):
         self.printText(self.decrypt(encMessage))
         
     
-    def printText(self, message):
-        self.text_insert(self.message_log, "\n_____________________")
-        self.text_insert(self.message_log, "\n"+self.username+": "+ message)
-        self.text_insert(self.message_log, "\n_____________________")
+    def printText(self, message, side="L"):
+        line="--------------------------------"
+        text=self.username+": "+ message
+        if side=="R":
+            self.text_insert(self.message_log, "\n"+line, "R")
+            self.text_insert(self.message_log, "\n"+text, "R")
+            self.text_insert(self.message_log, "\n"+line, "R")
+        else:
+            self.text_insert(self.message_log, "\n"+line)
+            self.text_insert(self.message_log, "\n"+text)
+            self.text_insert(self.message_log, "\n"+line)
         print("dec: "+message)
-        
+    
     def gen_key(self, keyword):
         if not self.fkey:
             keyword_bytes = keyword.encode('utf-8')
