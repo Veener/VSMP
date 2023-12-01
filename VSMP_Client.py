@@ -56,14 +56,23 @@ class VSMPClient(tk.Tk):
     def getText(self):
         send_this=self.message.get("1.0", tk.END)
         self.message.delete("1.0", tk.END)
-        print("enc: "+str(self.encrypt(send_this)))
-        self.sendText(str(self.encrypt(send_this)))
+        self.send_text(self.encrypt(send_this))
     
-    def sendText(self, send_this):
+    def send_text(self, encMessage):
+        #Sending code here
+        print("enc: "+str(encMessage))
+        self.recieve_text(encMessage)
+        
+    def recieve_text(self, encMessage):
+        #recieveing code here
+        self.printText(self.decrypt(encMessage))
+        
+    
+    def printText(self, message):
         self.text_insert(self.message_log, "\n_____________________")
-        self.text_insert(self.message_log, "\n"+self.username+": "+ self.decrypt(send_this))
+        self.text_insert(self.message_log, "\n"+self.username+": "+ message)
         self.text_insert(self.message_log, "\n_____________________")
-        print("dec: "+str(self.decrypt(send_this)))
+        print("dec: "+message)
         
     def gen_key(self, keyword):
         if not self.fkey:
@@ -80,6 +89,13 @@ class VSMPClient(tk.Tk):
         return encMessage
     
     def decrypt(self, encMessage):
+            # Check if encMessage is a valid Fernet token
+        if not isinstance(encMessage, bytes):
+            raise TypeError("encMessage must be of type bytes")
+
+        # Check if encMessage has the correct structure
+        if len(encMessage) < 32:
+            raise ValueError("Invalid Fernet token length")
         fkey=self.gen_key(self.keyWord)
         message = fkey.decrypt(encMessage).decode()
         return message
