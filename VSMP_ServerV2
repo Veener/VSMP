@@ -23,23 +23,46 @@ def accept_wrapper(sock):
     events = selectors.EVENT_READ | selectors.EVENT_WRITE
     sel.register(conn, events, data=data)
 
-
-def service_connection(key, mask):
+            
+def service_connectionMerge(key, mask):
     sock = key.fileobj
     data = key.data
     if mask & selectors.EVENT_READ:
-        recv_data = sock.recv(1024)  # Should be ready to read
+        recv_data = sock.recv(4096)  # Should be ready to read
         if recv_data:
             data.outb += recv_data
         else:
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)
-            sock.close()
+            sock.close()    
     if mask & selectors.EVENT_WRITE:
         if data.outb:
             print(f"Echoing {data.outb!r} to {data.addr}")
             sent = sock.send(data.outb)  # Should be ready to write
             data.outb = data.outb[sent:]
+
+def service_connection(key, mask):
+    sock = key.fileobj
+    data = key.data
+    if mask & selectors.EVENT_READ:
+        recv_data = sock.recv(4096)  # Should be ready to read
+        if recv_data:
+            messages = recv_data.split(b"\0")  # Assuming the delimiter is a null byte
+
+            # Send each message individually
+            for message in messages:
+                if message:
+                    sock.send(message)
+                    print(f"Echoing {message!r} to {data.addr}")
+            
+            # Reset recv_data to an empty byte string
+            recv_data = b""
+        else:
+            recv_data = b""
+            print(f"Closing connection to {data.addr}")
+            sel.unregister(sock)
+            sock.close()
+
 
 
 if len(sys.argv) != 3:

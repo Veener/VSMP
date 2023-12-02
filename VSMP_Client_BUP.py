@@ -6,7 +6,7 @@ import hashlib
 import base64
 
 import socket
-from VSMP_ServerConnectTest2 import Sender
+
 
 class VSMPClient(tk.Tk):
     def __init__(self, username, keyWord):
@@ -30,8 +30,6 @@ class VSMPClient(tk.Tk):
             self.geometry(f"{ww}x{wh}+{cx}+{cy}")
             self.minsize(width=300, height=625)
             self.message_Frame()
-            
-            self.snd=Sender()
     
    
     def message_Frame(self):
@@ -66,22 +64,25 @@ class VSMPClient(tk.Tk):
         self.send_text(self.encrypt(send_this))
     
     def send_text(self, encMessage):
+        #Sending code here
         self.printText(self.decrypt(encMessage), "R")
-        self.snd.main(self.username, encMessage, "127.0.0.1", 42323, 1)
-        #print("enc: "+str(encMessage))
+        print("enc: "+str(encMessage))
         self.recieve_text(encMessage)
         
-        #NEW SERVER CODE MAY NEED
+        #NEW SERVER CODE MAY NEED FIX
         self.HOST = "127.0.0.1"  # The server's hostname or IP address
         self.PORT = 65432  # The port used by the server
 
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((self.HOST, self.PORT))
+            s.sendall(b"Hello, world")
+            data = s.recv(1024)
+
+        print(f"Received {data!r}")
         
     def recieve_text(self, encMessage):
-        self.recieved=self.snd.recv_data
-        #print(self.recieved)
-        #print(self.snd.recv_data)
-        #self.printText(self.decrypt(encMessage))
-        self.printText(self.decrypt(self.recieved[1]))
+        #recieveing code here
+        self.printText(self.decrypt(encMessage))
         
     
     def printText(self, message, side="L"):
@@ -95,7 +96,7 @@ class VSMPClient(tk.Tk):
             self.text_insert(self.message_log, "\n"+line)
             self.text_insert(self.message_log, "\n"+text)
             self.text_insert(self.message_log, "\n"+line)
-        #print("dec: "+message)
+        print("dec: "+message)
     
     def gen_key(self, keyword):
         if not self.fkey:

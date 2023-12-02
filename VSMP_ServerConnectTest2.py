@@ -11,7 +11,11 @@ import types
 class Sender():
     def main(self, user, message, host, port, num_conns):
         self.sel = selectors.DefaultSelector()
-        self.messages = [user.encode("utf-8"), message.encode("utf-8")]
+        if type(user)!=bytes:
+            user=user.encode("utf-8")
+        if type(message)!=bytes:
+            message=message.encode("utf-8")
+        self.messages = [user, message]
         self.recv_data=[]
         
         """if len(sys.argv) != 4:
@@ -60,7 +64,7 @@ class Sender():
         sock = key.fileobj
         data = key.data
         if mask & selectors.EVENT_READ:
-            recv_data = sock.recv(1024)  # Should be ready to read
+            recv_data = sock.recv(4096)  # Should be ready to read
             if recv_data:
                 print(f"Received {recv_data!r} from connection {data.connid}")
                 self.recv_data.append(recv_data)
