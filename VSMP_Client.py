@@ -5,6 +5,8 @@ from cryptography.fernet import Fernet
 import hashlib
 import base64
 
+import socket
+
 class VSMPClient(tk.Tk):
     def __init__(self, username, keyWord):
             super().__init__()
@@ -65,6 +67,17 @@ class VSMPClient(tk.Tk):
         self.printText(self.decrypt(encMessage), "R")
         print("enc: "+str(encMessage))
         self.recieve_text(encMessage)
+        
+        #NEW SERVER CODE MAY NEED FIX
+        self.HOST = "127.0.0.1"  # The server's hostname or IP address
+        self.PORT = 65432  # The port used by the server
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((self.HOST, self.PORT))
+            s.sendall(b"Hello, world")
+            data = s.recv(1024)
+
+        print(f"Received {data!r}")
         
     def recieve_text(self, encMessage):
         #recieveing code here
