@@ -9,7 +9,7 @@ import socket
 from VSMP_ServerConnectTest2 import Sender
 
 class VSMPClient(tk.Tk):
-    def __init__(self, username, keyWord):
+    def __init__(self, username, keyWord, host, port):
             super().__init__()
             self.title("VSMP")
             #self.iconbitmap("D:/SpaceShuttle.ico")
@@ -32,6 +32,9 @@ class VSMPClient(tk.Tk):
             self.message_Frame()
             
             self.snd=Sender()
+            #NEW SERVER CODE MAY NEED
+            self.HOST = host  # The server's hostname or IP address
+            self.PORT = port  # The port used by the server
     
    
     def message_Frame(self):
@@ -52,7 +55,7 @@ class VSMPClient(tk.Tk):
         self.message_log.grid(column=0, row=1)
         self.message.grid(column=0, row=2,)
         self.send.grid(column=0, row=3, sticky=tk.S, pady=15)
-
+    
     def text_insert(self, textBox, insertmessage, side="L"):
         if side=="R":
             self.message_log.tag_configure(side, justify="right")
@@ -66,27 +69,22 @@ class VSMPClient(tk.Tk):
         self.send_text(self.encrypt(send_this))
     
     def send_text(self, encMessage):
-        self.printText(self.decrypt(encMessage), "R")
-        self.snd.main(self.username, encMessage, "127.0.0.1", 42323, 1)
+        self.printText(self.username, self.decrypt(encMessage), "R")
+        self.snd.main(self.username, encMessage, self.HOST, self.PORT, 1)
         #print("enc: "+str(encMessage))
         self.recieve_text(encMessage)
-        
-        #NEW SERVER CODE MAY NEED
-        self.HOST = "127.0.0.1"  # The server's hostname or IP address
-        self.PORT = 65432  # The port used by the server
-
-        
+                
     def recieve_text(self, encMessage):
         self.recieved=self.snd.recv_data
         #print(self.recieved)
         #print(self.snd.recv_data)
         #self.printText(self.decrypt(encMessage))
-        self.printText(self.decrypt(self.recieved[1]))
+        self.printText(str(self.recieved[0])[2:-1], self.decrypt(self.recieved[1]))
         
     
-    def printText(self, message, side="L"):
+    def printText(self, username, message, side="L"):
         line="--------------------------------"
-        text=self.username+": "+ message
+        text=username+": "+ message
         if side=="R":
             self.text_insert(self.message_log, "\n"+line, "R")
             self.text_insert(self.message_log, "\n"+text, "R")
@@ -118,6 +116,7 @@ class VSMPClient(tk.Tk):
 
         # Check if encMessage has the correct structure
         if len(encMessage) < 32:
+            print(encMessage)
             raise ValueError("Invalid Fernet token length")
         fkey=self.gen_key(self.keyWord)
         message = fkey.decrypt(encMessage).decode()
@@ -125,5 +124,5 @@ class VSMPClient(tk.Tk):
     
 
 if __name__ == "__main__":
-    vsmp = VSMPClient("Vinny","Banana")
+    vsmp = VSMPClient("Vinny","Banana", "127.0.0.1", 42323)
     vsmp.mainloop()

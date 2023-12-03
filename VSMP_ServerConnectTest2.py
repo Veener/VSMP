@@ -6,6 +6,7 @@ import sys
 import socket
 import selectors
 import types
+import time
 
 
 class Sender():
@@ -73,11 +74,14 @@ class Sender():
                 print(f"Closing connection {data.connid}")
                 self.sel.unregister(sock)
                 sock.close()
+                recv_data=[]
         if mask & selectors.EVENT_WRITE:
             if not data.outb and data.messages:
                 data.outb = data.messages.pop(0)
+                data.outb += b"\0"  # Add delimiter to the end of each message
             if data.outb:
                 print(f"Sending {data.outb!r} to connection {data.connid}")
+                #time.sleep(0.1)  Used to be needed, but delimiter does same but better
                 sent = sock.send(data.outb)  # Should be ready to write
                 data.outb = data.outb[sent:]
 

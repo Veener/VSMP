@@ -13,7 +13,7 @@ import selectors
 import types
 
 sel = selectors.DefaultSelector()
-
+dataArray=[]
 
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
@@ -45,15 +45,16 @@ def service_connection(key, mask):
     sock = key.fileobj
     data = key.data
     if mask & selectors.EVENT_READ:
-        recv_data = sock.recv(4096)  # Should be ready to read
-        print(recv_data)
+        dataArray.append(sock.recv(4096))
+        #recv_data = sock.recv(4096)  # Should be ready to read
+        print(dataArray)
         print(":::TEST1:::")
-        if recv_data:
-            messages = recv_data.split(b"\0")  # Assuming the delimiter is a null byte
-            print(messages)
+        if dataArray:
+            #messages = dataArray.split(b"\0")  # Assuming the delimiter is a null byte
+            print(dataArray)
             print(":::TEST2:::")
             # Send each message individually
-            for message in messages:
+            for message in dataArray:
                 if message:
                     sock.send(message)
                     print(f"Echoing {message!r} to {data.addr}")
@@ -76,6 +77,7 @@ host, port = sys.argv[1], int(sys.argv[2])
 """
 host="127.0.0.1"
 port=42323
+
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 lsock.bind((host, port))
 lsock.listen()
