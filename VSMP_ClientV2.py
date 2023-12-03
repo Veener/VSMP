@@ -7,6 +7,10 @@ import base64
 
 import socket
 from VSMP_ServerConnectTest2 import Sender
+import time
+from functools import lru_cache
+
+from threading import Thread
 
 class VSMPClient(tk.Tk):
     def __init__(self, username, keyWord, host, port):
@@ -20,7 +24,16 @@ class VSMPClient(tk.Tk):
             self.username=username
             self.keyWord=keyWord
             self.fkey=0
-
+            self.HOST = host  # The server's hostname or IP address
+            self.PORT = port  # The port used by the server
+            self.recieve_open=True 
+            self.recieved=[]
+            self.snd=Sender() 
+            
+            self.recieve_thread = Thread(target=self.recieve_text)
+            self.recieve_thread.daemon=True
+            self.recieve_thread.start() 
+            
             ww = 600
             wh = 625
             sw = self.winfo_screenwidth()
@@ -31,12 +44,8 @@ class VSMPClient(tk.Tk):
             self.minsize(width=300, height=625)
             self.message_Frame()
             
-            self.snd=Sender()
-            #NEW SERVER CODE MAY NEED
-            self.HOST = host  # The server's hostname or IP address
-            self.PORT = port  # The port used by the server
-    
-   
+            
+
     def message_Frame(self):
         self.messageFrame=tk.Frame(master=self, bg="pink", padx=25, pady=25)
         self.messageFrame.columnconfigure([0,1], weight=1)
@@ -51,40 +60,85 @@ class VSMPClient(tk.Tk):
 
         self.messageFrame.pack(padx=25, pady=25, fill=tk.BOTH)
 
+        self.message.bind("<Return>", self.enter_pressed)
+        
         self.greeting.grid(column=0, row=0, sticky=tk.N, pady=10)
         self.message_log.grid(column=0, row=1)
         self.message.grid(column=0, row=2,)
         self.send.grid(column=0, row=3, sticky=tk.S, pady=15)
-        print("it ran")
-    
+        
+        
+        #print("it ran")
+        
+                #self.recieve_text()
+                
     
     def text_insert(self, textBox, insertmessage, side="L"):
         if side=="R":
             self.message_log.tag_configure(side, justify="right")
         textBox.config(state=tk.NORMAL)
-        textBox.insert(tk.END,insertmessage, side)
+        textBox.insert(tk.END, insertmessage, side)
+        textBox.yview(tk.END)
         textBox.config(state=tk.DISABLED)
-
-    def getText(self):
-        send_this=self.message.get("1.0", tk.END)
-        self.message.delete("1.0", tk.END)
-        self.send_text(self.encrypt(send_this))
     
+    
+    def getText(self):
+        #self.recieve_open=False
+        send_this=self.message.get("0.0", tk.END)
+        self.message.delete("0.0", tk.END)
+        self.send_text(self.encrypt(send_this))
+        
+    def enter_pressed(self, event):
+        # Ignore the event object
+        self.getText()
+        self.message.delete("1.0", tk.END)
+        
     def send_text(self, encMessage):
         self.printText(self.username, self.decrypt(encMessage), "R")
         self.snd.main(self.username, encMessage, self.HOST, self.PORT, 1)
+        #self.recieve_open=True
+        #self.recieve_text()  
         #print("enc: "+str(encMessage))
-        self.recieve_text(encMessage)
+        #self.recieve_text()
                 
-    def recieve_text(self, encMessage):
-        self.recieved=self.snd.recv_data
+    def recieve_text(self):
+        #print("called")
+        while self.recieve_open==True:
+            time.sleep(.00001) 
+            #print("...")      
+            try:
+                #print("test1")
+                self.recieved=self.snd.recv_data  
+            except KeyboardInterrupt:
+                print("Caught keyboard interrupt, exiting")
+            except:
+                pass
+            if self.recieved:
+                #self.recieve_open=False
+                self.handle_data()
+                #self.recieve_open=True
+        
         #print(self.recieved)
         #print(self.snd.recv_data)
         #self.printText(self.decrypt(encMessage))
-        self.printText(str(self.recieved[0])[2:-1], self.decrypt(self.recieved[1]))
-        
+    def handle_data(self):
+        #print("test2")
+        printed=False 
+        while printed==False:
+            try: 
+                print("try")
+                self.printText(str(self.recieved[0])[2:-1], self.decrypt(self.recieved[1]))
+                print("good")
+                printed=True
+            except:
+                printed=False
+        #print("PRINTJNG TEXTTTTTT")
+        self.recieved=[]
+        self.snd.recv_data=[]
+                    
     def printText(self, username, message, side="L"):
-        line="--------------------------------"
+        #print("PRINTED???")
+        line="-------------------------------"
         text=username+": "+ message
         if side=="R":
             self.text_insert(self.message_log, "\n"+line, "R")
@@ -127,4 +181,11 @@ class VSMPClient(tk.Tk):
 
 if __name__ == "__main__":
     vsmp = VSMPClient("Vinny","Banana", "127.0.0.1", 42323)
+    vsmp.recieve_open=True
+    
     vsmp.mainloop()
+    
+    
+    
+    
+    
