@@ -24,7 +24,7 @@ def accept_wrapper(sock):
     sel.register(conn, events, data=data)
 
             
-def service_connectionMerge(key, mask):
+"""def service_connectionMerge(key, mask):
     sock = key.fileobj
     data = key.data
     if mask & selectors.EVENT_READ:
@@ -39,7 +39,7 @@ def service_connectionMerge(key, mask):
         if data.outb:
             print(f"Echoing {data.outb!r} to {data.addr}")
             sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
+            data.outb = data.outb[sent:]"""
 
 def service_connection(key, mask):
     sock = key.fileobj

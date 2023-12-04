@@ -1,11 +1,3 @@
-import sys
-import socket
-import selectors
-import types
-
-sel = selectors.DefaultSelector()
-
-# ...
 #python VSMP_ServerV2 127.0.0.1 42323
 import sys
 import socket
@@ -13,33 +5,18 @@ import selectors
 import types
 
 sel = selectors.DefaultSelector()
-
+clientList=[]
 
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
     print(f"Accepted connection from {addr}")
+    clientList.append(conn)
+    print(clientList)
     conn.setblocking(False)
     data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
     events = selectors.EVENT_READ | selectors.EVENT_WRITE
     sel.register(conn, events, data=data)
 
-            
-def service_connectionMerge(key, mask):
-    sock = key.fileobj
-    data = key.data
-    if mask & selectors.EVENT_READ:
-        recv_data = sock.recv(4096)  # Should be ready to read
-        if recv_data:
-            data.outb += recv_data
-        else:
-            print(f"Closing connection to {data.addr}")
-            sel.unregister(sock)
-            sock.close()    
-    if mask & selectors.EVENT_WRITE:
-        if data.outb:
-            print(f"Echoing {data.outb!r} to {data.addr}")
-            sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
 
 def service_connection(key, mask):
     sock = key.fileobj
@@ -53,14 +30,20 @@ def service_connection(key, mask):
             print(messages)
             print(":::TEST2:::")
             # Send each message individually
-            for message in messages:
+            for client in clientList:
+                #if client != sock:
+                for message in messages:
+                    client.send(message)
+                    print(f"Echoing {message!r} to {client.getpeername()}")
+            """for message in messages:
                 if message:
                     sock.send(message)
-                    print(f"Echoing {message!r} to {data.addr}")
+                    print(f"Echoing {message!r} to {data.addr}")"""
             
             # Reset recv_data to an empty byte string
             recv_data = b""
         else:
+            clientList.remove(sock)
             recv_data = b""
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)

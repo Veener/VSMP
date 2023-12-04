@@ -7,7 +7,7 @@ import socket
 import selectors
 import types
 import time
-from threading import Thread
+
 
 class Sender():
     def main(self, user, message, host, port, num_conns):
@@ -19,19 +19,27 @@ class Sender():
         self.messages = [user, message]
         self.recv_data=[]
         
+        """if len(sys.argv) != 4:
+            print(f"Usage: {sys.argv[0]} <host> <port> <num_connections>")
+        sys.exit(1)
+
+        host, port, num_conns = sys.argv[1:4]"""
+        
         self.start_connections(host, int(port), int(num_conns))
-        while True:
-            try:
+
+        try:
+            while True:
                 events = self.sel.select(timeout=1)
                 if events:
-                    for key, mask in events:           
+                    for key, mask in events:
                         self.service_connection(key, mask)
                 # Check for a socket being monitored to continue.
                 if not self.sel.get_map():
                     break
-            except KeyboardInterrupt:
-                print("Caught keyboard interrupt, exiting")
-            #self.sel.close()
+        except KeyboardInterrupt:
+            print("Caught keyboard interrupt, exiting")
+        finally:
+            self.sel.close()
 
 
     def start_connections(self, host, port, num_conns):
@@ -56,29 +64,26 @@ class Sender():
     def service_connection(self, key, mask):
         sock = key.fileobj
         data = key.data
-        while True: 
-            if mask & selectors.EVENT_READ:
-                recv_data = sock.recv(4096)  # Should be ready to read
-                if recv_data:
-                    print(f"Received {recv_data!r} from connection {data.connid}")
-                    self.recv_data.append(recv_data)
-                    data.recv_total += len(recv_data)
-                if data.recv_total == data.msg_total:
-                    print(f"Closing connection {data.connid}")
-                    #self.sel.unregister(sock)
-                    #sock.close()
-                    recv_data=[]
-                if not recv_data:
-                    print("waiting")
-            if mask & selectors.EVENT_WRITE:
-                if not data.outb and data.messages:
-                    data.outb = data.messages.pop(0)
-                    data.outb += b"\0"  # Add delimiter to the end of each message
-                if data.outb:
-                    print(f"Sending {data.outb!r} to connection {data.connid}")
-                    #time.sleep(0.1)  Used to be needed, but delimiter does same but better
-                    sent = sock.send(data.outb)  # Should be ready to write
-                    data.outb = data.outb[sent:]
+        if mask & selectors.EVENT_READ:
+            recv_data = sock.recv(4096)  # Should be ready to read
+            if recv_data:
+                print(f"Received {recv_data!r} from connection {data.connid}")
+                self.recv_data.append(recv_data)
+                data.recv_total += len(recv_data)
+            if not recv_data or data.recv_total == data.msg_total:
+                print(f"Closing connection {data.connid}")
+                self.sel.unregister(sock)
+                sock.close()
+                recv_data=[]
+        if mask & selectors.EVENT_WRITE:
+            if not data.outb and data.messages:
+                data.outb = data.messages.pop(0)
+                data.outb += b"\0"  # Add delimiter to the end of each message
+            if data.outb:
+                print(f"Sending {data.outb!r} to connection {data.connid}")
+                #time.sleep(0.1)  Used to be needed, but delimiter does same but better
+                sent = sock.send(data.outb)  # Should be ready to write
+                data.outb = data.outb[sent:]
 
 
 

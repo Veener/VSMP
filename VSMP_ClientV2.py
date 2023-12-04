@@ -8,7 +8,7 @@ import base64
 import socket
 from VSMP_ServerConnectTest2 import Sender
 import time
-from functools import lru_cache
+
 
 from threading import Thread
 
@@ -104,7 +104,7 @@ class VSMPClient(tk.Tk):
     def recieve_text(self):
         #print("called")
         while self.recieve_open==True:
-            time.sleep(.00001) 
+            time.sleep(.0001) 
             #print("...")      
             try:
                 #print("test1")
@@ -130,6 +130,9 @@ class VSMPClient(tk.Tk):
                 self.printText(str(self.recieved[0])[2:-1], self.decrypt(self.recieved[1]))
                 print("good")
                 printed=True
+            except KeyboardInterrupt:
+                print("Caught keyboard interrupt, exiting")
+                break
             except:
                 printed=False
         #print("PRINTJNG TEXTTTTTT")

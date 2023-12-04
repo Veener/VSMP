@@ -1,4 +1,6 @@
 Step 1: Build encoding and decoding system based on keys      DONE
 Step 2: Simulate send and recieve commands                    DONE
 Step 3: Local server integration                              DONE
-Step 4: Full server integration 
+Step 4: Full server integration                               FAIL
+Step 5: Rewrite Server/Client
+    Step 5a: Add back Button
