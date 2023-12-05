@@ -5,24 +5,24 @@ import socket
 
 usernameList=[]
 clientList=[]
-MessageQueue=[]
+
 
 def handle_client(conn, addr):
     try:
         while True:
             data = conn.recv(4096)
-            MessageQueue.append(data)
-            data2=data.decode("utf-8")
+            dataL = data.split(b"\0")
+            username=dataL[0]
             
+            """data2=data.decode("utf-8")
             if data2.lower() == "close":
                 conn.send("closed".encode("utf-8"))
                 break
             print(f"Received: {data2}")
             # convert and send accept response to the client
     
-            conn.send(data)
-            
-            broadcast()
+            #conn.send(data)"""
+            broadcast(dataL, username)
     except KeyboardInterrupt:
         print("KeyStop")
         pass
@@ -32,12 +32,23 @@ def handle_client(conn, addr):
         conn.close()
         print(f"Connection to client ({addr[0]}:{addr[1]}) closed")
 
-def broadcast():
+def broadcast(messages,  username):
+    print(str(username))
+    messages.pop(0)
+    print(f"Messages: {messages}")
     for client in clientList:
-        for message in MessageQueue:
-            client.send(message)
-            print(message)
-    MessageQueue=[]
+        print("t1")
+        #print(f"Client: {client}")
+        try:
+            print("t2")
+            for message in messages:
+                print(f"{username}: {message}")
+                print("t3")
+                client.send(bytes(message))
+                
+        finally:
+            pass
+            print("done sending")
     
 
 def __init__():
