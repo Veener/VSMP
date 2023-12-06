@@ -36,12 +36,28 @@ def handle_client(conn, addr):
         print(f"Connection to client ({addr[0]}: {addr[1]}) closed")
 
 def broadcast(messages,  username):
-    print(str(username)[2:-1])
+    """print(str(username)[2:-1])
     usernameCol=str(username)[2:-1] + ": "
     usernameCol
-    messages.pop(0)
+    messages.pop(0)"""
     print(f"Messages: {messages}")
-    for client in clientList:
+    messageList=b""
+    for message in messages:
+        messageList+=message
+        messageList += b"\0"
+        print(f"#{username}: {message}")
+    print("created ML")
+    try:
+        for client in clientList:    
+            client.send(bytes(username)+bytes(messageList))
+            time.sleep(.001)
+            print(f"sent to {client}")
+        print(f"ML={username}: {messageList}")
+    finally:
+            print("done sending")
+    
+        
+    """for client in clientList:
         print("t1")
         #print(f"Client: {client}")
         try:
@@ -53,7 +69,7 @@ def broadcast(messages,  username):
                 time.sleep(.001)
                 
         finally:
-            print("done sending")
+            print("done sending")"""
     
 
 def __init__():
