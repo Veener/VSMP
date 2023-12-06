@@ -10,31 +10,30 @@ def __init__():
     global c
     c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     c.connect((host, port))
-    listenThread=threading.Thread(target=listen())
+    listenThread=threading.Thread(target=listen)
+    sendThread=threading.Thread(target=sendData)
+    print("listening")
     listenThread.start()
-    sendThread=threading.Thread(target=sendData())
+    print("sending")   
     sendThread.start()
     
+    
 def listen():
-    try: 
-        while True:          
+    while True: 
+        try:       
             response=c.recv(4096)
             response=response.decode("utf-8")
-            print("yo")
-
-            """if response.lower() == "closed":
-                break"""
-
-            print(f"Received: {response}")
-    except Exception as e:
-        print(f"ClientSide error: {e}")
-    finally:   
-        c.close()
-        print("client closed")
+            print(f"{response}")
+        except Exception as e:
+            print(f"ClientSide error: {e}")  
+            c.close()
+            print("client closed")
+            break
  
 def sendData():
     while True:
-        data = input("Data:")
+        data=""
+        data = input()
         dataL2=data.split("|")
         print(dataL2)
         dataL=[]

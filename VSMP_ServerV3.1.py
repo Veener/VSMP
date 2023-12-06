@@ -13,6 +13,7 @@ def handle_client(conn, addr):
             data = conn.recv(4096)
             dataL = data.split(b"\0")
             username=dataL[0]
+            dataL.pop()
             
             """data2=data.decode("utf-8")
             if data2.lower() == "close":
@@ -27,13 +28,16 @@ def handle_client(conn, addr):
         print("KeyStop")
         pass
     except Exception as e:
-        print(f"Client error: {e}")
+        print(f"Handler Error: {e}")
     finally:
         conn.close()
-        print(f"Connection to client ({addr[0]}:{addr[1]}) closed")
+        clientList.remove(conn)
+        print(f"Connection to client ({addr[0]}: {addr[1]}) closed")
 
 def broadcast(messages,  username):
-    print(str(username))
+    print(str(username)[2:-1])
+    usernameCol=str(username)[2:-1] + ": "
+    usernameCol
     messages.pop(0)
     print(f"Messages: {messages}")
     for client in clientList:
@@ -42,12 +46,11 @@ def broadcast(messages,  username):
         try:
             print("t2")
             for message in messages:
-                print(f"{username}: {message}")
+                print(f"p1{username}: {message}")
                 print("t3")
-                client.send(bytes(message))
+                client.send(bytes(usernameCol.encode("utf-8"))+bytes(message))
                 
         finally:
-            pass
             print("done sending")
     
 
