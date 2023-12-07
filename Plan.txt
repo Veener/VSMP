@@ -2,5 +2,13 @@ Step 1: Build encoding and decoding system based on keys      DONE
 Step 2: Simulate send and recieve commands                    DONE
 Step 3: Local server integration                              DONE
 Step 4: Full server integration                               FAIL
-Step 5: Rewrite Server/Client
-    Step 5a: Add back Button
+Step 5: Rewrite Server/Client                                 DONE
+Step 6: Bug fixes & Error Handling
+    6a: Wrong Key Bugs 
+        try making a killed item in slot 2 or send closed or something so that the server kills it. Maybe that will help. 
+    6b: Any looping Bugs
+Step 7:  Additions
+    7a: Add back Button(to login)
+    7b: Add Close Button
+    7c: Join and leave messages
+    7d: You are chatting With(X, Y, Z)
