@@ -27,7 +27,7 @@ def handle_client(conn, addr):
             broadcast(dataL, username)
     except KeyboardInterrupt:
         print("KeyStop")
-        pass
+        serverRescue()
     except Exception as e:
         print(f"Handler Error: {e}")
     finally:
@@ -36,6 +36,9 @@ def handle_client(conn, addr):
         print(f"Connection to client ({addr[0]}: {addr[1]}) closed")
 
 def broadcast(messages,  username):
+    if not messages or not clientList:
+        print("NAHT")
+        return
     """print(str(username)[2:-1])
     usernameCol=str(username)[2:-1] + ": "
     usernameCol
@@ -43,18 +46,30 @@ def broadcast(messages,  username):
     print(f"Messages: {messages}")
     messageList=b""
     for message in messages:
+        if not message:
+            print("empty byte. Breaking")
+            break
         messageList+=message
         messageList += b"\0"
         print(f"#{username}: {message}")
     print("created ML")
     try:
         for client in clientList:    
-            client.send(bytes(username)+bytes(messageList))
+            client.send(bytes(messageList))
             time.sleep(.001)
             print(f"sent to {client}")
         print(f"ML={username}: {messageList}")
+    except KeyboardInterrupt:
+        print("Manual Break")
+        serverRescue()
     finally:
-            print("done sending")
+        print("done sending")
+        
+def serverRescue():
+    for client in clientList: 
+        client.close()
+        clientList.remove(client)
+    print(f"Server Rescued. All connections severed")
     
         
     """for client in clientList:
@@ -89,6 +104,9 @@ def __init__():
             print(f"got clinet from{addr[0]}: {addr[1]}")
             thread=threading.Thread(target=handle_client, args=(conn, addr))
             thread.start()
+    except KeyboardInterrupt:
+        print("Manual Break")
+        serverRescue()
     except Exception as e:
         print(f"Error: {e}")
     finally:

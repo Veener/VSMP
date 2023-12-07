@@ -1,6 +1,6 @@
 import tkinter as tk 
 import tkinter.ttk as ttk
-from VSMP_Client import VSMPClient 
+from VSMP_ClientV3 import VSMPClient 
 
 class VSMP_Login(tk.Tk):
     def __init__(self):
@@ -21,9 +21,11 @@ class VSMP_Login(tk.Tk):
             cy = int(sh / 2 - wh / 2)
             self.geometry(f"{ww}x{wh}+{cx}+{cy}")
             self.minsize(width=300, height=150)
+            print("t1")
             self.login_frame()
 
     def login_frame(self):
+        print("t2")
         self.loginFrame=tk.Frame(master=self, bg="pink", padx=25, pady=25)
 
         self.username_text=tk.Label(master=self.loginFrame, text="Username:", bg="pink",)
@@ -56,8 +58,9 @@ class VSMP_Login(tk.Tk):
         self.key=self.key_input.get()
         self.host=self.host_input.get()
         self.port=self.port_input.get()
-        VSMPClient(self.username, self.key, self.host, self.port)
-        self.destroy()
+        global loginInfo
+        loginInfo=[]
+        loginInfo=[self.username, self.key, self.host, self.port]
         
         
 if __name__ == "__main__":

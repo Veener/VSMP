@@ -8,8 +8,7 @@ import base64
 import socket
 import VSMP_ServerV3x2Client as cl
 import time
-
-
+import VSMP_Client_Login as login
 
 from threading import Thread
 
@@ -22,11 +21,7 @@ class VSMPClient(tk.Tk):
             self.style=ttk.Style(self)
             self.style.configure("TButton", font=("Helvetica", 24))
 
-            self.username=username
-            self.keyWord=keyWord
             self.fkey=0
-            self.HOST = host  # The server's hostname or IP address
-            self.PORT = int(port)  # The port used by the server
             self.recieve_open=True 
             self.recieved=[]
             
@@ -42,17 +37,76 @@ class VSMPClient(tk.Tk):
             cy = int(sh / 2 - wh / 2)
             self.geometry(f"{ww}x{wh}+{cx}+{cy}")
             self.minsize(width=300, height=625)
-            self.message_Frame()
-            self.serverConnect()
+            self.loginWindow()
             
-            
+     
+    def loginWindow(self):
+        self.win2=tk.Toplevel()
+        self.win2.title("VSMP Login")
+        #self.iconbitmap("D:/SpaceShuttle.ico")
+        self.win2.attributes("-topmost", 1)
+        self.win2.style=ttk.Style(self)
+        self.win2.style.configure("TButton", font=("Helvetica", 24))
+
+
+
+        ww = 300
+        wh = 200
+        sw = self.win2.winfo_screenwidth()
+        sh = self.win2.winfo_screenheight()
+        cx = int(sw / 2 - ww / 2)
+        cy = int(sh / 2 - wh / 2)
+        self.win2.geometry(f"{ww}x{wh}+{cx}+{cy}")
+        self.win2.minsize(width=300, height=150)
+        self.win2.lift(self)
+        self.login_frame()
+    
+    def login_frame(self):
+        print("t2")
+        self.loginFrame=tk.Frame(master=self.win2, bg="pink", padx=25, pady=25)
+
+        self.username_text=tk.Label(master=self.loginFrame, text="Username:", bg="pink",)
+        self.username_input=tk.Entry(master=self.loginFrame,)
+        self.key_text=tk.Label(master=self.loginFrame, text="Key:", bg="pink",)
+        self.key_input=tk.Entry(master=self.loginFrame,)
+        self.host_text=tk.Label(master=self.loginFrame, text="Host:", bg="pink",)
+        self.host_input=tk.Entry(master=self.loginFrame,)
+        self.host_input.insert(1,"127.0.0.1")
+        self.port_text=tk.Label(master=self.loginFrame, text="Port:", bg="pink",)
+        self.port_input=tk.Entry(master=self.loginFrame,)
+        self.port_input.insert(1,"42323")
+
+        self.login_button=tk.Button(master=self.loginFrame, text="Login", command=lambda: self.login())
+
+        self.loginFrame.pack(padx=25, pady=25, fill=tk.BOTH)
+
+        self.username_text.grid(row=0, column=0,)
+        self.username_input.grid(row=0, column=1, columnspan=2)
+        self.key_text.grid(row=1, column=0)
+        self.key_input.grid(row=1, column=1, columnspan=2)
+        self.host_text.grid(row=2, column=0,)
+        self.host_input.grid(row=2, column=1, columnspan=2)
+        self.port_text.grid(row=3, column=0)
+        self.port_input.grid(row=3, column=1, columnspan=2)
+        self.login_button.grid(row=4, column=1, columnspan=2)
+        
+    def login(self):
+        self.username=self.username_input.get()
+        self.keyWord=self.key_input.get()
+        self.host=self.host_input.get()
+        self.port=int(self.port_input.get())
+        
+        self.message_Frame()
+        self.serverConnect()  
+        self.win2.destroy()
+          
 
     def message_Frame(self):
         self.messageFrame=tk.Frame(master=self, bg="pink", padx=25, pady=25)
         self.messageFrame.columnconfigure([0,1], weight=1)
         self.messageFrame.rowconfigure([0,3], weight=1)
 
-        self.greeting = tk.Label(master=self.messageFrame, text="YOU ARE CHATTING WITH:")
+        self.greeting = tk.Label(master=self.messageFrame, text=f"YOU ARE CHATTING WITH:{self.username}")
         self.message= tk.Text(master=self.messageFrame, height=5)
         self.message_log= tk.Text( master=self.messageFrame, height=15, yscrollcommand=True)
         self.send=tk.Button(master=self.messageFrame, text="SEND", padx=50, pady=25, bg="blue", command=lambda:self.getText())  
@@ -75,7 +129,7 @@ class VSMPClient(tk.Tk):
                 
     def serverConnect(self):
         self.c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.c.connect((self.HOST, self.PORT))
+        self.c.connect((self.host, self.port))
         self.listenThread=Thread(target=self.listen)
         print("listening")
         self.listenThread.start()
@@ -114,7 +168,10 @@ class VSMPClient(tk.Tk):
             try:       
                 self.received=self.c.recv(4096)
                 self.recievedL=self.received.split(b"\0")
-                self.printText(str(self.recievedL[0])[2:-1], self.decrypt(self.recievedL[1]))
+                print(self.received)
+                print(self.recievedL)
+                if self.username!=str(self.recievedL[0])[2:-1]:
+                    self.printText(str(self.recievedL[0])[2:-1], self.decrypt(self.recievedL[1]))
                 #response=response.decode("utf-8")
                 #print(f"{response}")
             except KeyboardInterrupt:
@@ -202,12 +259,18 @@ class VSMPClient(tk.Tk):
             print(encMessage)
             raise ValueError("Invalid Fernet token length")
         fkey=self.gen_key(self.keyWord)
-        message = fkey.decrypt(encMessage).decode()
-        return message
+        try:
+            message = fkey.decrypt(encMessage).decode()
+            return message
+        except:
+            print("Your key is incorrect. Please Disconnect, and reconnnect with the correct Key. ")
+            self.c.close()
+            print("client closed")
+        
     
 
 if __name__ == "__main__":
-    vsmp = VSMPClient("Vinny","Banana", "127.0.0.1", 42323)
+    vsmp = VSMPClient("Kevin2","Banana1", "127.0.0.1", 42323)
     vsmp.recieve_open=True
     
     vsmp.mainloop()
