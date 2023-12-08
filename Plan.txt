@@ -2,8 +2,9 @@ Step 1: Build encoding and decoding system based on keys      DONE
 Step 2: Simulate send and recieve commands                    DONE
 Step 3(V2): Local server integration                          DONE
 Step 4: Full server integration                               FAIL
-Step 5(V3): Rewrite Server/Client                             DONE
-    5a: Cross Device Connection(change Host)                  DONE
+Step 5(V3.2/3.1): Rewrite Server/Client                       DONE
+    5a(V3.1/X): New Multi Thread Server                       DONE
+    5b: Cross Device Connection(change Host)                  DONE
 Step 6: Bug fixes & Error Handling
     6a: Wrong Key Bugs 
             (try making a killed item in slot 2 or send 
