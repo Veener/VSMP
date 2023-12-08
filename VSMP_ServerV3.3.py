@@ -97,6 +97,7 @@ def serverRescue():
 
 def __init__():
     host="127.0.0.1"
+    #host="192.168.4.97"
     port=42323
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
