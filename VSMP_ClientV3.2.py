@@ -6,9 +6,7 @@ import hashlib
 import base64
 
 import socket
-import VSMP_ServerV3x2Client as cl
 import time
-import VSMP_Client_Login as login
 
 from threading import Thread
 
@@ -200,7 +198,11 @@ class VSMPClient(tk.Tk):
             send_this += x
             send_this += b"\0"
         print(f"Bytes Sent: {send_this}")
-        self.c.send(send_this)
+        try: 
+            self.c.send(send_this)
+        except:
+            self.text_insert(self.message_log, "\n YOU ARE NOT CONNECTED TO A SERVER. PLEASE CLOSE AND RECONNECT")
+            print(' YOU ARE NOT CONNECTED TO A SERVER. PLEASE CLOSE AND RECONNECT')
                 
     def handle_data(self):
         #print("test2")
@@ -264,6 +266,7 @@ class VSMPClient(tk.Tk):
             return message
         except:
             print("You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. ")
+            self.text_insert(self.message_log, "\n You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. ")
             self.c.send("closeme")
             self.c.close()
             self.restartClient()

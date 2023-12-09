@@ -5,12 +5,14 @@ Step 4: Full server integration                               FAIL
 Step 5(V3.2/3.1): Rewrite Server/Client                       DONE
     5a(V3.1/X): New Multi Thread Server                       DONE
     5b: Cross Device Connection(change Host)                  DONE
-Step 6: Bug fixes & Error Handling
-    6a: Wrong Key Bugs 
-            (try making a killed item in slot 2 or send 
+Step 6: Bug fixes & Error Handling                            
+    6a: Wrong Key Bugs                                        
+            (try making a killed item in slot 2 or send       
             closed or something so that the server kills
             it. Maybe that will help.)
-    6b: Any looping Bugs
+    6b: Any looping Bugs                                      DONE?
+    6c: Server User Handling, confirm login. 
+    6d: kick bad messege sender, not reciever. 
 Step 7: Client Additions
     7a: Add back Button(to login)
     7b: Add Close Button
