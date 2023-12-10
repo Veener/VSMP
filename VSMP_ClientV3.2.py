@@ -165,6 +165,7 @@ class VSMPClient(tk.Tk):
         while True: 
             try:       
                 self.received=self.c.recv(4096)
+                print(self.received)
                 self.recievedL=self.received.split(b"\0")
                 print(f"Bytes Recieved: {self.received}")
                 #print(self.recievedL)

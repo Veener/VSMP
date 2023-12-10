@@ -173,8 +173,8 @@ class VSMPClient(tk.Tk):
                     try:
                         if self.recieved[2]=="!":
                             print(f"Error from Server: {self.recieved}")
-                    except:
-                        pass
+                    except IndexError:
+                        print("Error: Unexpected data received from server")
                     
                 else:
                     print(f"Bytes Recieved: {self.received}")
