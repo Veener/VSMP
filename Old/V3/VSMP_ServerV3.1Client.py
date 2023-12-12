@@ -22,8 +22,13 @@ def listen():
     while True: 
         try:       
             response=c.recv(4096)
+            print(f"response: {response}")
             response=response.decode("utf-8")
-            print(f"{response}")
+            print(response[0])
+            if response[0]=="!":
+                print("USER TAKEN LOL")
+            else:
+                print(f"{response}")
         except Exception as e:
             print(f"ClientSide error: {e}")  
             c.close()

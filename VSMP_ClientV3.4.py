@@ -7,6 +7,7 @@ import base64
 
 import socket
 import time
+import os
 
 from threading import Thread
 
@@ -37,6 +38,7 @@ class VSMPClient(tk.Tk):
             self.minsize(width=300, height=625)
             self.loginWindow()
             
+    #login Window Running+Handling
      
     def loginWindow(self):
         self.win2=tk.Toplevel()
@@ -97,6 +99,7 @@ class VSMPClient(tk.Tk):
         self.serverConnect()  
         self.win2.destroy()
           
+    #Main Window Running+Server Connect
 
     def message_Frame(self):
         self.messageFrame=tk.Frame(master=self, bg="pink", padx=25, pady=25)
@@ -133,6 +136,8 @@ class VSMPClient(tk.Tk):
         #print("sending") 
         print(f"Connected to Server at {self.host}: {self.port}")
         self.sendData("username", bytes(self.username.encode("utf-8")))
+ 
+    #Text Managment
     
     def text_insert(self, textBox, insertmessage, side="L"):
         if side=="R":
@@ -161,15 +166,28 @@ class VSMPClient(tk.Tk):
         #print("enc: "+str(encMessage))
         #self.recieve_text()
 
+    def printText(self, username, message, side="L"):
+        #print("PRINTED???")
+        line="-------------------------------"
+        text=username+": "+ message
+        if side=="R":
+            self.text_insert(self.message_log, "\n"+line, "R")
+            self.text_insert(self.message_log, "\n"+text, "R")
+            self.text_insert(self.message_log, "\n"+line, "R")
+        else:
+            self.text_insert(self.message_log, "\n"+line)
+            self.text_insert(self.message_log, "\n"+text)
+            self.text_insert(self.message_log, "\n"+line)
+        #print("dec: "+message)
+
+    #Server Communication+Handling
                 
     def listen(self):
         while True: 
             try:   
                 self.received=self.c.recv(4096)
                 if str(self.received)[2]=="!":
-                    print(f"Error from Server: {str(self.received)}")
-                    self.text_insert(self.message_log, f"\nError from Server: {str(self.received)[2:-1]}")
-                    self.text_insert(self.message_log, f"\nPlease Restart the clint with a new Username")
+                    self.restartClient("Server", f"{str(self.received)[2:-1]}\nPlease Restart the client with a new Username")
                     break
                 else:
                     self.receivedL=self.received.split(b"\0")
@@ -178,22 +196,13 @@ class VSMPClient(tk.Tk):
                     #print(self.receivedL)
                     if self.username!=str(self.receivedL[0])[2:-1]:
                         self.printText(str(self.receivedL[0])[2:-1], self.decrypt(self.receivedL[1]))
-                    
                 
-                """if not isinstance(self.received, (list, tuple)):
-                    try:
-                        if self.received[2]=="!":
-                            print(f"Error from Server: {self.received}")
-                    except IndexError:
-                        print("Error: Unexpected data received from server")
-                    """
-                #response=response.decode("utf-8")
-                #print(f"{response}")
-            except KeyboardInterrupt:
-                print("Caught keyboard interrupt, exiting")
+            except KeyboardInterrupt:   #Key Interput & Break
+                self.closeClient("Manual", "Caught keyboard interrupt, exiting")
                 break
-            except Exception as e:
-                print(f"ClientSide error: {e}")
+            except Exception as e:  #Print error and Break. #Should run a server close func
+                self.closeClient("Client", e)
+                #print(f"ClientSide error: {e}")
                 break
         self.c.close()
         print("client closed")
@@ -217,43 +226,13 @@ class VSMPClient(tk.Tk):
         print(f"Bytes Sent: {send_this}")
         try: 
             self.c.send(send_this)
-        except:
-            self.text_insert(self.message_log, "\n YOU ARE NOT CONNECTED TO A SERVER. PLEASE CLOSE AND RECONNECT")
-            print(' YOU ARE NOT CONNECTED TO A SERVER. PLEASE CLOSE AND RECONNECT')
+        except: #prints dissdconetted error. On next send, should restart client
+            self.restartClient("Server Connection","YOU ARE NOT CONNECTED TO A SERVER. PLEASE CLOSE AND RECONNECT" )
+
                 
-    def handle_data(self):
-        #print("test2")
-        printed=False 
-        while printed==False:
-            try: 
-                print("try")
-                self.printText(str(self.received[0])[2:-1], self.decrypt(self.received[1]))
-                print("good")
-                printed=True
-            except KeyboardInterrupt:
-                print("Caught keyboard interrupt, exiting")
-                break
-            except:
-                printed=False
-        #print("PRINTJNG TEXTTTTTT")
-        self.received=[]
-        self.snd.recv_data=[]
-                    
-    def printText(self, username, message, side="L"):
-        #print("PRINTED???")
-        line="-------------------------------"
-        text=username+": "+ message
-        if side=="R":
-            self.text_insert(self.message_log, "\n"+line, "R")
-            self.text_insert(self.message_log, "\n"+text, "R")
-            self.text_insert(self.message_log, "\n"+line, "R")
-        else:
-            self.text_insert(self.message_log, "\n"+line)
-            self.text_insert(self.message_log, "\n"+text)
-            self.text_insert(self.message_log, "\n"+line)
-        #print("dec: "+message)
-    
-    
+                   
+    #Encryption
+      
     def gen_key(self, keyword):
         if not self.fkey:
             keyword_bytes = keyword.encode('utf-8')
@@ -281,18 +260,31 @@ class VSMPClient(tk.Tk):
         try:
             message = fkey.decrypt(encMessage).decode()
             return message
-        except:
-            print("closing sender")
-            #self.c.send(f"close\0{str(self.received[0])[2:-1]}")
-            print("You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. ")
-            self.text_insert(self.message_log, "\n You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. ")
+        except: #Big error, recieved false. key. Should message server and kick other guy. FOr now tho, break, then restart clinet. 
+            self.restartClient("Handling","You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. " )
+             
+            #keep for future          
+            """print("closing sender")
+            self.c.send(f"close\0{str(self.received[0])[2:-1]}")
             self.c.send("closeme")
-            self.c.close()
-            self.restartClient()
-            print("client closed")
-    def restartClient(self):
-        self.destroy()
-        self.__init__        
+            self.closeClient()
+            print("client closed")"""
+    
+    #Error Handling
+    def closeClient(self, type, error):
+        print(f"{type} Error: {error}. \nClosing Client")
+        self.text_insert(self.message_log, f"\n{type} Error: {error}. \nClosing Client")
+        self.c.close()
+        time.sleep(10)
+
+    def restartClient(self, type, error):
+        print(f"{type} Error: {error}. \nRestarting Client")
+        self.text_insert(self.message_log, f"\n{type} Error: {error}. \nRestarting Client")
+        self.c.close()
+        time.sleep(5)
+        os.execl("C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/Coding/VSMP/VSMP_ClientV3.4.py")
+          
+    
     
 
 if __name__ == "__main__":

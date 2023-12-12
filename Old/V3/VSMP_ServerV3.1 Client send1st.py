@@ -10,9 +10,9 @@ def __init__():
     global c
     c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     c.connect((host, port))
-    sendThread=threading.Thread(target=sendData())
+    sendThread=threading.Thread(target=sendData)
     sendThread.start()
-    listenThread=threading.Thread(target=listen())
+    listenThread=threading.Thread(target=listen)
     listenThread.start()
     
     

@@ -10,24 +10,47 @@ usernameList={
 clientList=[]
 
 
+def __init__():
+    host="127.0.0.1"    #Local Host
+    #host="192.168.4.97" #Home
+    #host ="10.255.34.38" #School
+    port=42323
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((host, port))
+        s.listen()
+        print(f"Listening on {host}: {port}")
+        
+        while True:
+            conn, addr=s.accept()
+            clientList.append(conn)
+            
+            print(f"got client from{addr[0]}: {addr[1]}")
+            thread=threading.Thread(target=handle_client, args=(conn, addr))
+            thread.start()
+    except KeyboardInterrupt:
+        print("Manual Break")
+        serverRescue()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        s.close()
+        print("Server closed")
+
+
 def handle_client(conn, addr):
     try:
         while True:
             data = conn.recv(4096)
             if data:
                 dataL = data.split(b"\0")
+                print(f"Data:{data}, dataL:{dataL}")
                 username=str(dataL[0].decode("utf-8"))
                 print(username)
+                print(f"USernma fr:{dataL[1]}")
                 dataL.pop()
                 if username=="username":
-                    print (usernameList.keys())
-                    if username in usernameList.keys():
-                        conn.send(bytes("!Username Taken Try Again!".encode("utf-8")))
-                        print(bytes("!Username Taken Try Again!".encode("utf-8")))
-                        closeClient(conn)
-                    else:
-                        usernameList[username]=conn
-                        print(usernameList)
+                    checkUsername(dataL[1], conn)
                 elif username=="close":
                     closeClient(usernameList[username])
                 else:    
@@ -35,15 +58,7 @@ def handle_client(conn, addr):
                     broadcast(dataL, username)
             else:
                 pass
-            
-            """data2=data.decode("utf-8")
-            if data2.lower() == "close":
-                conn.send("closed".encode("utf-8"))
-                break
-            print(f"Received: {data2}")
-            # convert and send accept response to the client
-    
-            #conn.send(data)"""
+
             
     except KeyboardInterrupt:
         print("KeyStop")
@@ -51,8 +66,7 @@ def handle_client(conn, addr):
     except Exception as e:
         print(f"Handler Error: {e}")
     finally:
-        conn.close()
-        clientList.remove(conn)
+        closeClient(conn)
         print(f"Connection to client ({addr[0]}: {addr[1]}) closed")
 
 def broadcast(messages,  username):
@@ -95,49 +109,25 @@ def serverRescue():
 def closeClient(client):
     print(f"client at {client} Will be closed")
     client.close()
-    clientList.remove(client)
+    if client in clientList:
+        clientList.remove(client)
+    for key, value in usernameList.items():
+        if value == client:
+            del usernameList[key]
+            print(f"removed {key} from usernameList")
+            break
     
-        
-    """for client in clientList:
-        print("t1")
-        #print(f"Client: {client}")
-        try:
-            print("t2")
-            for message in messages:
-                print(f"p1{username}: {message}")
-                print("t3")
-                client.send(bytes(usernameCol.encode("utf-8"))+bytes(message))
-                time.sleep(.001)
-                
-        finally:
-            print("done sending")"""
-    
-
-def __init__():
-    host="127.0.0.1"
-    #host="192.168.4.97"
-    port=42323
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind((host, port))
-        s.listen()
-        print(f"Listening on {host}: {port}")
-        
-        while True:
-            conn, addr=s.accept()
-            clientList.append(conn)
-            
-            print(f"got clinet from{addr[0]}: {addr[1]}")
-            thread=threading.Thread(target=handle_client, args=(conn, addr))
-            thread.start()
-    except KeyboardInterrupt:
-        print("Manual Break")
-        serverRescue()
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        s.close()
-        print("Server closed")
+   
+def checkUsername(username, conn):
+    if username in usernameList.keys():
+        conn.send("!Username Taken Try Again!".encode("utf-8"))
+        #conn.send(bytes("!Username Taken Try Again!".encode("utf-8")))
+        print(bytes("!Username Taken Try Again!".encode("utf-8")))
+        print(usernameList.keys())
+        closeClient(conn)
+    else:
+        usernameList[username]=conn
+        print(usernameList)
 
 if __name__=="__main__":
     __init__()

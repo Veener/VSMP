@@ -37,6 +37,7 @@ class VSMPClient(tk.Tk):
             self.minsize(width=300, height=625)
             self.loginWindow()
             
+    #login Window Running+Handling
      
     def loginWindow(self):
         self.win2=tk.Toplevel()
@@ -97,6 +98,7 @@ class VSMPClient(tk.Tk):
         self.serverConnect()  
         self.win2.destroy()
           
+    #Main Window Running+Server Connect
 
     def message_Frame(self):
         self.messageFrame=tk.Frame(master=self, bg="pink", padx=25, pady=25)
@@ -133,6 +135,8 @@ class VSMPClient(tk.Tk):
         #print("sending") 
         print(f"Connected to Server at {self.host}: {self.port}")
         self.sendData("username", bytes(self.username.encode("utf-8")))
+ 
+    #Text Managment
     
     def text_insert(self, textBox, insertmessage, side="L"):
         if side=="R":
@@ -161,6 +165,21 @@ class VSMPClient(tk.Tk):
         #print("enc: "+str(encMessage))
         #self.recieve_text()
 
+    def printText(self, username, message, side="L"):
+        #print("PRINTED???")
+        line="-------------------------------"
+        text=username+": "+ message
+        if side=="R":
+            self.text_insert(self.message_log, "\n"+line, "R")
+            self.text_insert(self.message_log, "\n"+text, "R")
+            self.text_insert(self.message_log, "\n"+line, "R")
+        else:
+            self.text_insert(self.message_log, "\n"+line)
+            self.text_insert(self.message_log, "\n"+text)
+            self.text_insert(self.message_log, "\n"+line)
+        #print("dec: "+message)
+
+    #Server Communication+Handling
                 
     def listen(self):
         while True: 
@@ -239,21 +258,8 @@ class VSMPClient(tk.Tk):
         self.received=[]
         self.snd.recv_data=[]
                     
-    def printText(self, username, message, side="L"):
-        #print("PRINTED???")
-        line="-------------------------------"
-        text=username+": "+ message
-        if side=="R":
-            self.text_insert(self.message_log, "\n"+line, "R")
-            self.text_insert(self.message_log, "\n"+text, "R")
-            self.text_insert(self.message_log, "\n"+line, "R")
-        else:
-            self.text_insert(self.message_log, "\n"+line)
-            self.text_insert(self.message_log, "\n"+text)
-            self.text_insert(self.message_log, "\n"+line)
-        #print("dec: "+message)
-    
-    
+    #Encryption
+      
     def gen_key(self, keyword):
         if not self.fkey:
             keyword_bytes = keyword.encode('utf-8')
@@ -290,6 +296,9 @@ class VSMPClient(tk.Tk):
             self.c.close()
             self.restartClient()
             print("client closed")
+    
+    #Error Handling
+    
     def restartClient(self):
         self.destroy()
         self.__init__        

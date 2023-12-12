@@ -24,7 +24,10 @@ def handle_client(conn, addr):
             # convert and send accept response to the client
     
             #conn.send(data)"""
-            broadcast(dataL, username)
+            if username==b"hi":
+                conn.send(b"!Username Taken Try Again!")
+            else:
+                broadcast(dataL, username)
     except KeyboardInterrupt:
         print("KeyStop")
         pass
