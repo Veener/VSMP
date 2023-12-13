@@ -49,10 +49,8 @@ def handle_client(conn, addr):
                 print(username)
                 print(f"USernma fr:{dataL[1]}")
                 dataL.pop()
-                if username=="username":
-                    checkUsername(dataL[1], conn)
-                elif username=="close":
-                    closeClient(usernameList[username])
+                if username=="SERVER":
+                    serverMessageHandler(dataL, conn)
                 else:    
                     print("Bcast")
                     broadcast(dataL, username)
@@ -134,6 +132,19 @@ def checkUsername(username, conn):
     else:
         usernameList[username]=conn
         print(usernameList)
+
+def serverMessageHandler(dataL, conn):
+    type=dataL[1]
+    message=dataL[2]
+    if type=="username":
+        checkUsername(message, conn)
+    elif type=="close":
+        closeClient(usernameList[message])
+    elif type=="kick":
+        kickClient(message)
+    elif type=="KeyWarn":
+        #send message to "message" saying a user could not reeive message due to an incopatable key. 
+        pass
 
 if __name__=="__main__":
     __init__()

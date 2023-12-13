@@ -11,9 +11,11 @@ Step 6: Bug fixes & Error Handling
             closed or something so that the server kills
             it. Maybe that will help.)
     6b: Any looping Bugs                                      DONE?
-    6c: Server User Handling, confirm login.  #REMOVE FROM LIST PLS                DONE  (V3.4/3.3)
+    6c: Server User Handling, confirm login.                  DONE  (V3.4/3.3)
     6d: kick bad messege sender, not reciever. 
-    6e: distinction between Message Error(dont send message, refrech, cont) and Cleint error(disc client, close, recconnect)
+    6e: distinction between Message Error(dont send message,  DONE  (V3.4/3.4)
+        refrech, cont) and Client error
+        (disc client, close, recconnect)
     6f: Client X Close not close fully
 Step 7: Client Additions
     7a: Add back Button(to login)

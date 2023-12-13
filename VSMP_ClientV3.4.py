@@ -135,7 +135,8 @@ class VSMPClient(tk.Tk):
         self.listenThread.start()
         #print("sending") 
         print(f"Connected to Server at {self.host}: {self.port}")
-        self.sendData("username", bytes(self.username.encode("utf-8")))
+        self.serverMessage("username", self.username)
+        #self.sendData("username", bytes(self.username.encode("utf-8")))
  
     #Text Managment
     
@@ -187,7 +188,7 @@ class VSMPClient(tk.Tk):
             try:   
                 self.received=self.c.recv(4096)
                 if str(self.received)[2]=="!":
-                    self.restartClient("Server", f"{str(self.received)[2:-1]}\nPlease Restart the client with a new Username")
+                    self.restartClient("Server", f"{str(self.received)[3:-1]}")
                     break
                 else:
                     self.receivedL=self.received.split(b"\0")
@@ -195,7 +196,12 @@ class VSMPClient(tk.Tk):
                     print(f"Bytes received: {self.received}")
                     #print(self.receivedL)
                     if self.username!=str(self.receivedL[0])[2:-1]:
-                        self.printText(str(self.receivedL[0])[2:-1], self.decrypt(self.receivedL[1]))
+                        uname=str(self.receivedL[0])[2:-1]
+                        message=self.decrypt(self.receivedL[1])
+                        if message:
+                            self.printText(uname,message)
+                        else:
+                            self.printText(uname, "RECIEVED TEXT ENCRYPTED BY DIFFERENT KEY")
                 
             except KeyboardInterrupt:   #Key Interput & Break
                 self.closeClient("Manual", "Caught keyboard interrupt, exiting")
@@ -218,11 +224,13 @@ class VSMPClient(tk.Tk):
         dataL=[]
         dataL.append(username.encode("utf-8"))   
         dataL.append(data)
-        #print(dataL)
+        print(dataL)
         send_this=b""
-        for x in dataL:
+        send_this += username.encode("utf-8")
+        send_this += b"\0"
+        for x in data:
             send_this += x
-            send_this += b"\0"
+            send_this += b"\0" #swap and remove that null bite delete
         print(f"Bytes Sent: {send_this}")
         try: 
             self.c.send(send_this)
@@ -261,8 +269,9 @@ class VSMPClient(tk.Tk):
             message = fkey.decrypt(encMessage).decode()
             return message
         except: #Big error, recieved false. key. Should message server and kick other guy. FOr now tho, break, then restart clinet. 
-            self.restartClient("Handling","You have recived a message with a non-compatable key. Please Disconnect, and reconnnect with the correct Key. " )
-             
+            self.skipError("Handling","You have recived a message with a non-compatable key." )
+            #This should be a skip, and lit user manually go back to login
+            
             #keep for future          
             """print("closing sender")
             self.c.send(f"close\0{str(self.received[0])[2:-1]}")
@@ -271,6 +280,10 @@ class VSMPClient(tk.Tk):
             print("client closed")"""
     
     #Error Handling
+    def serverMessage(self, type, message):
+        data=[bytes(type.encode("utf-8")), bytes(message.encode("utf-8"))]
+        self.sendData("SERVER", data)
+
     def closeClient(self, type, error):
         print(f"{type} Error: {error}. \nClosing Client")
         self.text_insert(self.message_log, f"\n{type} Error: {error}. \nClosing Client")
@@ -281,9 +294,12 @@ class VSMPClient(tk.Tk):
         print(f"{type} Error: {error}. \nRestarting Client")
         self.text_insert(self.message_log, f"\n{type} Error: {error}. \nRestarting Client")
         self.c.close()
-        time.sleep(5)
+        time.sleep(3)
         os.execl("C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/Coding/VSMP/VSMP_ClientV3.4.py")
-          
+    
+    def skipError(self, type, error):
+        print(f"{type} Error: {error}.")
+        self.text_insert(self.message_log, f"\n{type} Error: {error}.")   
     
     
 
