@@ -46,8 +46,8 @@ def handle_client(conn, addr):
                 dataL = data.split(b"\0")
                 print(f"Data:{data}, dataL:{dataL}")
                 username=str(dataL[0].decode("utf-8"))
-                print(username)
-                print(f"USernma fr:{dataL[1]}")
+                #print(username)
+                #print(f"USernma fr:{dataL[2]}")
                 dataL.pop()
                 if username=="SERVER":
                     serverMessageHandler(dataL, conn)
@@ -131,11 +131,17 @@ def checkUsername(username, conn):
         closeClient(conn)
     else:
         usernameList[username]=conn
+        print(f"Adding username :{username}")
         print(usernameList)
 
+def keyWarn(username):
+    client=usernameList[username]
+    client.send(b"!A conencted user has a non-compatable key and did not recieve your message!")
+    print(f"Key Warned {username}")
+
 def serverMessageHandler(dataL, conn):
-    type=dataL[1]
-    message=dataL[2]
+    type=dataL[1].decode("utf-8")
+    message=dataL[2].decode("utf-8")
     if type=="username":
         checkUsername(message, conn)
     elif type=="close":
@@ -143,8 +149,9 @@ def serverMessageHandler(dataL, conn):
     elif type=="kick":
         kickClient(message)
     elif type=="KeyWarn":
-        #send message to "message" saying a user could not reeive message due to an incopatable key. 
-        pass
+        keyWarn(message)
+    else:
+        print("Server Message Not Handled")
 
 if __name__=="__main__":
     __init__()

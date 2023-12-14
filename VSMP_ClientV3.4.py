@@ -19,6 +19,7 @@ class VSMPClient(tk.Tk):
             self.attributes("-topmost", 1)
             self.style=ttk.Style(self)
             self.style.configure("TButton", font=("Helvetica", 24))
+            self.protocol('WM_DELETE_WINDOW', lambda: self.closeClient("Not An", "User Closed"))
 
             self.fkey=0
             self.recieve_open=True 
@@ -188,8 +189,7 @@ class VSMPClient(tk.Tk):
             try:   
                 self.received=self.c.recv(4096)
                 if str(self.received)[2]=="!":
-                    self.restartClient("Server", f"{str(self.received)[3:-1]}")
-                    break
+                    self.skipError("Server", f"{str(self.received)[3:-1]}") #used to be restartError+break, just use back button/testart button
                 else:
                     self.receivedL=self.received.split(b"\0")
                     print(self.received)
@@ -197,10 +197,13 @@ class VSMPClient(tk.Tk):
                     #print(self.receivedL)
                     if self.username!=str(self.receivedL[0])[2:-1]:
                         uname=str(self.receivedL[0])[2:-1]
-                        message=self.decrypt(self.receivedL[1])
-                        if message:
-                            self.printText(uname,message)
-                        else:
+                        try:
+                            message=self.decrypt(self.receivedL[1])
+                            if message:
+                                self.printText(uname,message)
+                            else:
+                                self.printText(uname, "RECIEVED TEXT ENCRYPTED BY DIFFERENT KEY")
+                        except:
                             self.printText(uname, "RECIEVED TEXT ENCRYPTED BY DIFFERENT KEY")
                 
             except KeyboardInterrupt:   #Key Interput & Break
@@ -210,8 +213,7 @@ class VSMPClient(tk.Tk):
                 self.closeClient("Client", e)
                 #print(f"ClientSide error: {e}")
                 break
-        self.c.close()
-        print("client closed")
+        print("NO WHILE")
             
     def sendData(self, username, data):
         """dataL2=data.split("|")
@@ -222,15 +224,23 @@ class VSMPClient(tk.Tk):
             dataL.append(username.encode("utf-8"))"""
 
         dataL=[]
-        dataL.append(username.encode("utf-8"))   
-        dataL.append(data)
-        print(dataL)
+        dataL.append(username.encode("utf-8"))  
         send_this=b""
-        send_this += username.encode("utf-8")
-        send_this += b"\0"
-        for x in data:
-            send_this += x
-            send_this += b"\0" #swap and remove that null bite delete
+        
+        if isinstance(data, list):
+            print("data sent is list")
+            send_this += username.encode("utf-8")
+            send_this += b"\0"
+            for x in data:
+                send_this += x
+                send_this += b"\0" #swap and remove that null bite delete
+        else:
+            print("data sent is bytes")
+            dataL.append(data)
+            print(dataL)
+            for x in dataL:
+                send_this += x
+                send_this += b"\0" #swap and remove that null bite delete
         print(f"Bytes Sent: {send_this}")
         try: 
             self.c.send(send_this)
@@ -270,6 +280,7 @@ class VSMPClient(tk.Tk):
             return message
         except: #Big error, recieved false. key. Should message server and kick other guy. FOr now tho, break, then restart clinet. 
             self.skipError("Handling","You have recived a message with a non-compatable key." )
+            self.serverMessage("KeyWarn", str(self.receivedL[0])[2:-1])
             #This should be a skip, and lit user manually go back to login
             
             #keep for future          
@@ -288,6 +299,7 @@ class VSMPClient(tk.Tk):
         print(f"{type} Error: {error}. \nClosing Client")
         self.text_insert(self.message_log, f"\n{type} Error: {error}. \nClosing Client")
         self.c.close()
+        self.destroy()
         time.sleep(10)
 
     def restartClient(self, type, error):
