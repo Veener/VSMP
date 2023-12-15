@@ -1,0 +1,16 @@
+10:05:20 | Listening on 127.0.0.1: 42323
+10:05:31 | Client from 127.0.0.1: 56080 has connected
+10:05:31 | Adding username: 213
+
+10:05:35 | Message: [b'213', b'gAAAAABlfGs_T4KCccL_imSPvZESd7RL6prqf3WffXnjyJPms43ZKIP5-8SUbD6pDhVitwUWm36ml5X9WZOzL3pvAMhI2i8KYA==']
+10:05:35 | Message sent to 1/1 users
+
+10:05:46 | Client from 127.0.0.1: 56086 has connected
+10:05:46 | Adding username: h1
+
+10:05:48 | Message: [b'h1', b'gAAAAABlfGtMUsL8cJPNMam2CsdEX55j43lHrABRAsi6HXmcqRY3344WaFuzaE6ORBdGL7rkXhApDXVVX9CV_eF0OZCVw8yaHA==']
+10:05:48 | Message sent to 2/2 users
+
+10:05:58 | Message: [b'213', b'gAAAAABlfGtWlNmFL5xdrdE4z1Ya9_Gy7RKYClgzUP6kEoUsge8Cznq33PZqH8oJqSQP4Uy23NjBsK9UJFsoDWdOGRuHLQvTIOx5zffnPjTVC5_eyzAxieA=']
+10:05:58 | Message sent to 2/2 users
+
