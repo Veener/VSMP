@@ -125,7 +125,7 @@ def kickClient(username):
    
 def checkUsername(username, conn):
     if username in usernameList.keys():
-        conn.send("!Username Taken, Try a New One!".encode("utf-8"))
+        conn.send("*Username Taken, Try a New One!".encode("utf-8"))
         print(bytes("!Username Taken, Try a New One!".encode("utf-8")))
         print(usernameList.keys())
         closeClient(conn)

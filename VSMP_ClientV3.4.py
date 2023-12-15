@@ -189,7 +189,9 @@ class VSMPClient(tk.Tk):
             try:   
                 self.received=self.c.recv(4096)
                 if str(self.received)[2]=="!":
-                    self.skipError("Server", f"{str(self.received)[3:-1]}") #used to be restartError+break, just use back button/testart button
+                    self.skipError("Server", f"{str(self.received)[3:-1]}") 
+                elif str(self.received)[2]=="*":
+                    self.restartClient("Critical Server", f"{str(self.received)[3:-1]}") 
                 else:
                     self.receivedL=self.received.split(b"\0")
                     print(self.received)
@@ -283,12 +285,6 @@ class VSMPClient(tk.Tk):
             self.serverMessage("KeyWarn", str(self.receivedL[0])[2:-1])
             #This should be a skip, and lit user manually go back to login
             
-            #keep for future          
-            """print("closing sender")
-            self.c.send(f"close\0{str(self.received[0])[2:-1]}")
-            self.c.send("closeme")
-            self.closeClient()
-            print("client closed")"""
     
     #Error Handling
     def serverMessage(self, type, message):

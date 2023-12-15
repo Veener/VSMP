@@ -1,0 +1,32 @@
+Step 1: Build encoding and decoding system based on keys,        DONE
+Step 2: Simulate send and recieve commands ,                     DONE
+Step 3(V2): Local server integration        ,                    DONE  (V2)
+Step 4: Full server integration              ,                   FAIL
+Step 5: Rewrite Server/Client                 ,                  DONE  (V3.2/3.1)
+    5a: New Multi Thread Server                ,                 DONE  (V3.1/X)
+    5b: Cross Device Connection(change Host)    ,                DONE
+Step 6: Bug fixes & Error Handling                            
+    6a: Wrong Key Bugs                                          DONE  (V3.5/3.4)                      
+            (try making a killed item in slot 2 or send       
+            closed or something so that the server kills
+            it. Maybe that will help.)
+    6b: Any looping Bugs 
+        Client Loops with balnk messge(When same user, find root)                                     
+    6c: Server User Handling, confirm login.                    DONE  (V3.4/3.3)
+    6d: inform/warn both                                        DONE  (V3.5/3.4)
+    6e: distinction between Message Error(dont send message,    DONE  (V3.4/3.4)
+        refrech, cont) and Client error
+        (disc client, close, recconnect)
+    6f: Client X Close not close fully                          DONE  (V3.5/3.4)
+Step 7: Client Additions
+    7a: Add back Button(to login)
+    7b: Add Close Button #WHAT PURPOSE
+    7c: Join and leave messages
+    7d: You are chatting With(X, Y, Z)
+    7e: Clean, more functions(close, etc.)
+    7f: Save+Load Chat history
+    7g: Print Cleanup and Logging
+Step 8: Server Additions
+    8a: 2nd thread for terminal input commands(check client list, serverRescue, kick, send message, etc. )
+    8b: Print Cleanup and Logging
+
