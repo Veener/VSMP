@@ -27,6 +27,7 @@ Step 7: Client Additions
     7f: Save+Load Chat history
     7g: Print Cleanup and Logging
 Step 8: Server Additions
-    8a: 2nd thread for terminal input commands(check client list, serverRescue, kick, send message, etc. )
+    8a: 2nd thread for terminal input commands                  DONE    (V4.0/4.0)
+        (client list, serverRescue, kick,  message, etc. )        
     8b: Print Cleanup and Logging
 
