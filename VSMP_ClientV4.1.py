@@ -7,6 +7,7 @@ import base64
 
 import socket
 import time
+import datetime
 import os
 
 from threading import Thread
@@ -14,6 +15,7 @@ from threading import Thread
 class VSMPClient(tk.Tk):
     def __init__(self, username, keyWord, host, port):
             super().__init__()
+            print(tk.TkVersion)
             self.title("VSMP")
             #self.iconbitmap("D:/SpaceShuttle.ico")
             self.attributes("-topmost", 1)
@@ -24,7 +26,7 @@ class VSMPClient(tk.Tk):
             self.fkey=0
             self.recieve_open=True 
             self.received=""
-            
+            self.saveT=False            
             
             #self.recieve_thread.daemon=True
 
@@ -104,42 +106,30 @@ class VSMPClient(tk.Tk):
 
     def message_Frame(self):
         
-        WINDOW_WIDTH =450 #not dynamic
-        TOTAL_COLUMNS = 8
-
-        # Calculate column widths based on proportions and total columns
-        restart_width = int(WINDOW_WIDTH * 0.25 / TOTAL_COLUMNS)
-        greeting_width = int(WINDOW_WIDTH * 0.50 / TOTAL_COLUMNS)
-        save_width = load_width = int(WINDOW_WIDTH * 0.125 / TOTAL_COLUMNS)
-        
         self.messageFrame = tk.Frame(master=self, bg="pink", padx=25, pady=25)
-        self.messageFrame.columnconfigure([0, 1], weight=1)
+        self.messageFrame.columnconfigure(0, weight=1)
         self.messageFrame.rowconfigure([0, 3], weight=1)
 
         # Topbar frame with dynamic resizing buttons
         self.topbarFrame = tk.Frame(master=self.messageFrame, bg="pink")
-        #self.topbarFrame.columnconfigure([0, 7], weight=1)
+        self.topbarFrame.columnconfigure(0, weight=2)
+        self.topbarFrame.columnconfigure(1, weight=4)
+        self.topbarFrame.columnconfigure([2,3], weight=1)
 
         # Buttons with fixed width and expanding frames
-        restart_frame = tk.Frame(self.topbarFrame)
-        restart_frame.pack(side="left", expand=True)
-        self.restart_button = tk.Button(restart_frame, text="RS", padx=5, pady=5, width=restart_width, command=lambda: self.restartClient("Manual", "Client Restarted by User"))
-        self.restart_button.pack(expand=True)
+        
+        self.restart_button = tk.Button(self.topbarFrame, text="Restart", padx=5, pady=5, command=lambda: self.restartClient("Manual", "Client Restarted by User"))
+        self.restart_button.grid(row=0, column=0, sticky="we")
+        
+        self.greeting = tk.Label(self.topbarFrame,  text=f"YOU ARE CHATTING WITH:{self.username}")
+        self.greeting.grid(row=0, column=1, sticky="we")
+        
+        self.save_button = tk.Button(self.topbarFrame, text="Save", padx=5, pady=5,bg="red", command=lambda: self.enableSaving())
+        self.save_button.grid(row=0, column=2, sticky="we")
 
-        greeting_frame = tk.Frame(self.topbarFrame)
-        greeting_frame.pack(side="left", expand=True)
-        self.greeting = tk.Label(greeting_frame, width=greeting_width, text=f"YOU ARE CHATTING WITH:{self.username}")
-        self.greeting.pack(expand=True)
-
-        save_frame = tk.Frame(self.topbarFrame)
-        save_frame.pack(side="left", expand=True)
-        self.save_button = tk.Button(save_frame, text="S", padx=5, pady=5,width=save_width,command=lambda: self.getText())
-        self.save_button.pack(expand=True)
-
-        load_frame = tk.Frame(self.topbarFrame)
-        load_frame.pack(side="left", expand=True)
-        self.load_button = tk.Button(load_frame, text="L", padx=5, pady=5, width=load_width, command=lambda: self.getText())
-        self.load_button.pack(expand=True)       
+        self.load_button = tk.Button(self.topbarFrame, text="Load", padx=5, pady=5,command=lambda: self.loadMessages())
+        self.load_button.grid(row=0, column=3, sticky="we")      
+        
         
         self.message= tk.Text(master=self.messageFrame, height=5)
         self.message_log= tk.Text( master=self.messageFrame, height=15, yscrollcommand=True)
@@ -148,13 +138,14 @@ class VSMPClient(tk.Tk):
         self.text_insert(self.message_log, "THIS IS A MESSAGE AHHH OMG YOU GOT MAILLLLLL\n")
 
         self.messageFrame.pack(padx=25, pady=25, fill=tk.BOTH)
-        self.topbarFrame.grid(column=0, row=0, padx=25, pady=25, sticky="we")
+        self.topbarFrame.grid(column=0, row=0, pady=25, sticky=tk.S)
+        #self.topbarFrame.grid_propagate(True)
 
         self.message.bind("<Return>", self.enter_pressed)
         
         self.message_log.grid(column=0, row=1, columnspan=8)
         self.message.grid(column=0, row=2, columnspan=8)
-        self.send.grid(column=0, row=3, sticky=tk.S, pady=15, columnspan=4)
+        self.send.grid(column=0, row=3, sticky=tk.S, pady=15)
         
         """self.restart_button.grid(column=0, row=0, columnspan=2, sticky=tk.N, pady=10)
         self.greeting.grid(column=2, row=0, columnspan=4, sticky=tk.N, pady=10)
@@ -210,26 +201,69 @@ class VSMPClient(tk.Tk):
         #print("PRINTED???")
         line="-------------------------------"
         text=username+": "+ message
+        print(f"ptext {text}")
         if side=="R":
             self.text_insert(self.message_log, "\n"+line, "R")
             self.text_insert(self.message_log, "\n"+text, "R")
             self.text_insert(self.message_log, "\n"+line, "R")
+            if self.saveT==True:
+                self.saveMessage("\0"+ text)
         else:
             self.text_insert(self.message_log, "\n"+line)
             self.text_insert(self.message_log, "\n"+text)
             self.text_insert(self.message_log, "\n"+line)
+            if self.saveT==True:
+                self.saveMessage(text)
         #print("dec: "+message)
 
+    def enableSaving(self):
+        if self.saveT==True:
+            self.saveT=False
+            self.save_button.configure(bg="red")
+        elif self.saveT==False:
+            self.saveT=True
+            self.save_button.configure(bg="green")
+        print(f"saving is now {self.saveT}")
+    
+    def saveMessage(self, message):
+        cdate=datetime.date.today()
+    
+        fdate = cdate.strftime("%m-%d-%Y")
+
+        print("Message saving")
+        with open(f'SavedMessages/{fdate}--{self.username}.txt', 'a') as file:
+            file.write(f"{message}")
+    
+    def loadMessages(self):
+        cdate=datetime.date.today()
+        dash="-------------------------------"
+        fdate = cdate.strftime("%m-%d-%Y")
+
+        print("Message loading")
+        with open(f'SavedMessages/{fdate}--{self.username}.txt', 'r') as file:
+            lines=file.readlines()
+            print(lines)
+            for line in lines:
+                if line[0]=="\0":
+                    line.replace("\0" ,"", 1)
+                    print(line)
+                    self.text_insert(self.message_log, "\n"+dash, "R")
+                    self.text_insert(self.message_log, "\n"+str(line), "R")
+                    self.text_insert(self.message_log, "\n"+dash, "R")
+                else:
+                   self.printText("Loaded Message",line) 
+        
+        
     #Server Communication+Handling
                 
     def listen(self):
         while True: 
             try:   
                 self.received=self.c.recv(4096)
-                if str(self.received)[2]=="!":
-                    self.skipError("Server", f"{str(self.received)[3:-1]}") 
-                elif str(self.received)[2]=="*":
+                if str(self.received)[2]=="*":
                     self.restartClient("Critical Server", f"{str(self.received)[3:-1]}")
+                elif str(self.received)[2]=="!":
+                    self.skipError("Server", f"{str(self.received)[3:-1]}") 
                 if str(self.received)[2]=="#":
                     self.text_insert(self.message_log, f"\n{str(self.received)[3:-1]}") 
                 else:
@@ -344,12 +378,11 @@ class VSMPClient(tk.Tk):
         self.text_insert(self.message_log, f"\n{type} Error: {error}. \nRestarting Client")
         self.c.close()
         time.sleep(3)
-        os.execl("C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/Coding/VSMP/VSMP_ClientV3.4.py")
+        os.execl("C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/Coding/VSMP/VSMP_ClientV4.1.py")
     
     def skipError(self, type, error):
         print(f"{type} Error: {error}.")
         self.text_insert(self.message_log, f"\n{type} Error: {error}.")   
-    
     
 
 if __name__ == "__main__":

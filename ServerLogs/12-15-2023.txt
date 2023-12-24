@@ -14,3 +14,53 @@
 10:05:58 | Message: [b'213', b'gAAAAABlfGtWlNmFL5xdrdE4z1Ya9_Gy7RKYClgzUP6kEoUsge8Cznq33PZqH8oJqSQP4Uy23NjBsK9UJFsoDWdOGRuHLQvTIOx5zffnPjTVC5_eyzAxieA=']
 10:05:58 | Message sent to 2/2 users
 
+10:55:32 | Listening on 127.0.0.1: 42323
+10:55:40 | Client from 127.0.0.1: 56406 has connected
+10:55:40 | Adding username: 123
+
+10:55:56 | Client from 127.0.0.1: 56413 has connected
+10:55:56 | Adding username: 122`
+
+10:56:04 | Message: [b'123', b'gAAAAABlfHcUgxR8pqaPpRJDOK5I6LUkeITM-3CPwA8EWlsvNFGBbsUDl7JeNasoVLV0ELM_B-UxN2XsfdKg6ilON45ssvIpug==']
+10:56:04 | Message sent to 2/2 users
+
+10:56:06 | Message: [b'122`', b'gAAAAABlfHcWa7nieYl4JrgzJYh4mWCTLO07cmqtVFMUAj4YNlqnCGUQbQXYwNNR-gQJuPOM9XgEBfvnPjCjdpWoloMlqQ6Izg==']
+10:56:06 | Message sent to 2/2 users
+
+10:56:10 | Message: [b'122`', b'gAAAAABlfHcadQXxVvHGdShbgEukP7Uba1D0lnQV3YTvWvz9bPb1N1Tz9v1mg5G2naKAHi6Rj_yQTzv4lfrNHnE9KPPNknhhHA==']
+10:56:10 | Message sent to 2/2 users
+
+10:56:14 | Message: [b'123', b'gAAAAABlfHcestCBbE5k0bQNAZJr80hERWMAvwxJggbefDkJNTjX446bTjXwuTzwhOwY_9Yb26ox631uStkKdgopj6LH0H77aw==']
+10:56:14 | Message sent to 2/2 users
+
+10:56:21 | Message: [b'123', b'gAAAAABlfHclTxH5YhWK9PhHp7eJfVNCFYw9nVtiYpszl4IzApMmkndEIb8M41ouiHIcKK0jlGBwrWHwXmPpd5yVFypg2fbq1Q==']
+10:56:21 | Message sent to 2/2 users
+
+10:56:33 | Message: [b'122`', b'gAAAAABlfHcxk3ELw8oVieQk7Wmauz1GClhk54VEaU2NxC-xBYmow5gWJGNkPPxA5PhDHf-VCdcLGYpAVG01dGwHgeOMCc61cCTcB7EuegIcuMwGsK2KUkAZn8JOvHdyKL96A3ISpm2Y']
+10:56:33 | Message sent to 2/2 users
+
+10:56:37 | Message: [b'123', b'gAAAAABlfHc1ge9oqPY_gHucPpnaKl2oppm3Pz0iUf3V4p6u2xSiSpob8gRN8tmKwZC8UrZwZvUuN0R-5k_jGuI4GPutIeTrjQ==']
+10:56:37 | Message sent to 2/2 users
+
+10:56:40 | Message: [b'122`', b'gAAAAABlfHc4ppjR2NqwN_XeujhpfD-HX22fFLbYkMd5hN3O0QeJPxueycaFKrKLD2S3TjRRyf4xuGHYp5-g8wJkifLsyXbj6Q==']
+10:56:40 | Message sent to 2/2 users
+
+10:56:55 | Message: [b'123', b'gAAAAABlfHdHv7XOIYFGfkdfuyJNMAUytA9ZJzt3TqTz1_9I79bS2P12WupxB5gnDmqwm0hezInHLp0LSG_r4_w-sbbvSR80Esw5IwkjDHvDvBOOgSLhJUk6tLYN8_MrE6TYojcTLz9rgBzgmsc_1gjBzsbnL4YMww==']
+10:56:55 | Message sent to 2/2 users
+
+10:57:02 | Message: [b'122`', b'gAAAAABlfHdOqOlAa9Nn4OAYcjSsux8wUVJrG16IFA43kBFV8A8WjxfPZ2KzdyUX6WYd89GKZX3m-q89yS8NyEDyZaoKbhlBfubsh9pCF6vdr3p1PmeGfBq1-h7g-IMyKDMyM2EPSlgr']
+10:57:02 | Message sent to 2/2 users
+
+10:57:06 | Message: [b'123', b'gAAAAABlfHdSS6E3hzBDfrnqrl7FBkQ6gbnZWXFLYR8o_Vw2IzescXhgMXWBJxuH-F3s6QPw2YRLs8QgnjR8DNc_F-fIms9tRw==']
+10:57:06 | Message sent to 2/2 users
+
+10:59:58 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+10:59:58 | client at <socket.socket fd=360, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 56406)> Will be closed
+10:59:58 | 123 has left the chat
+10:59:58 | Connection to client (127.0.0.1: 56406) closed
+
+10:59:59 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+10:59:59 | client at <socket.socket fd=420, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 56413)> Will be closed
+10:59:59 | 122` has left the chat
+10:59:59 | Connection to client (127.0.0.1: 56413) closed
+

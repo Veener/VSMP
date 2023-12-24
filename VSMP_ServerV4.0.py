@@ -33,6 +33,7 @@ def __init__():
             clientList.append(conn)
             
             logprint(f"Client from {addr[0]}: {addr[1]} has connected")
+            conn.send(bytes(f"#You are chatting with{list(usernameList.keys())[3:0]}".encode("utf-8"))) #NO WORKING
             thread=threading.Thread(target=handle_client, args=(conn, addr))
             thread.start()
     except KeyboardInterrupt:
@@ -151,6 +152,7 @@ def closeClient(client):
         if value == client:
             del usernameList[key]
             logprint(f"{key} has left the chat")
+            serverBroadcast(f"{key} has left the chat")
             break
     
   
@@ -170,6 +172,7 @@ def checkUsername(username, conn):
     else:
         usernameList[username]=conn
         logprint(f"Adding username: {username}\n")
+        serverBroadcast(f"{username} has joined the chat")
         #print(usernameList)
 
 def keyWarn(username):

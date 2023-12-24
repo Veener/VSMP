@@ -20,14 +20,14 @@ Step 6: Bug fixes & Error Handling                              DONE    (V3.5/3.
     6f: Client X Close not close fully                          DONE    (V3.5/3.4)
 Step 7: Client Additions
     7a: Add back Button(to login)
-    7b: Add Close Button #WHAT PURPOSE
-    7c: Join and leave messages
-    7d: You are chatting With(X, Y, Z)
-    7e: Clean, more functions(close, etc.)
-    7f: Save+Load Chat history
-    7g: Print Cleanup and Logging
+    7b: Join and leave messages                                 DONE    (V4.0/4.1)
+    7c: You are chatting With(X, Y, Z)
+    7d: Clean, more functions(close, etc.)
+    7e: Save+Load Chat history
+    7f: Print Cleanup and Logging
 Step 8: Server Additions
     8a: 2nd thread for terminal input commands                  DONE    (V4.0/4.0)
         (client list, serverRescue, kick,  message, etc. )        
     8b: Print Cleanup and Logging                               DONE    (V4.0/4.0)
-
+Step 9: Bugs AGAIN
+    9a: Cant close during login
