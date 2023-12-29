@@ -45,3 +45,215 @@
 
 00:04:37 | Connection to client (127.0.0.1: 51505) closed
 
+00:51:19 | Client from 127.0.0.1: 52382 has connected
+00:51:20 | Adding username: 123
+
+00:51:20 | SB to <socket.socket fd=504, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52382)>
+00:51:20 | done SB
+
+00:51:40 | Client from 127.0.0.1: 52390 has connected
+00:51:40 | Adding username: 1243
+
+00:51:40 | SB to <socket.socket fd=504, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52382)>
+00:51:40 | SB to <socket.socket fd=492, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52390)>
+00:51:40 | done SB
+
+00:51:44 | Message: [b'123', b'gAAAAABljl5wv2sSprO1Mm7WhRWw9pjRpzNX1niYnuY4kvrFN0UP9OxDRcJCZ2iQdzfsJZLGGDlRGQASU0if3LQ39y3XTUWSnA==']
+00:51:44 | Message sent to 2/2 users
+
+00:51:48 | Message: [b'1243', b'gAAAAABljl507oJVC9gHxGjw_cN8yLV3JwulbbOxg5ynBkvjeX2xkytAGNqosY4aEJNePYFypvkPjNhkfGAWoDtLiiLQdpT6-g==']
+00:51:48 | Message sent to 2/2 users
+
+00:51:51 | Message: [b'123', b'gAAAAABljl53-CL1Iec2YiRUdUDoRhWZptsQjT9CELJMi_3beagpRU2LXdvrM4BNbtFJx5akgsadKHmupTZpKzqgxDSG5LNl7Q==']
+00:51:51 | Message sent to 2/2 users
+
+00:51:57 | Message: [b'1243', b'gAAAAABljl59-apNJUMMPHyU6CCoWGZzVMOUYK_ILN_KCnblbs0p92G71glkPTIt8by7YGyUKZPuIDsxgpLawjocdFqwC8hl9Q==']
+00:51:57 | Message sent to 2/2 users
+
+00:52:00 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+00:52:00 | client at <socket.socket fd=492, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52390)> Will be closed
+00:52:00 | 1243 has left the chat
+00:52:00 | SB to <socket.socket fd=504, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52382)>
+00:52:00 | done SB
+
+00:52:00 | Connection to client (127.0.0.1: 52390) closed
+
+00:53:47 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+00:53:47 | client at <socket.socket fd=504, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52382)> Will be closed
+00:53:47 | 123 has left the chat
+00:53:47 | done SB
+
+00:53:47 | Connection to client (127.0.0.1: 52382) closed
+
+01:13:51 | Client from 127.0.0.1: 52716 has connected
+01:13:51 | Adding username: 123
+
+01:13:51 | SB to <socket.socket fd=500, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52716)>
+01:13:51 | done SB
+
+01:14:23 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:14:23 | client at <socket.socket fd=500, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52716)> Will be closed
+01:14:23 | 123 has left the chat
+01:14:23 | done SB
+
+01:14:23 | Connection to client (127.0.0.1: 52716) closed
+
+01:14:35 | Client from 127.0.0.1: 52733 has connected
+01:14:35 | Adding username: 123
+
+01:14:35 | SB to <socket.socket fd=492, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52733)>
+01:14:35 | done SB
+
+01:14:55 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:14:55 | client at <socket.socket fd=492, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52733)> Will be closed
+01:14:55 | 123 has left the chat
+01:14:55 | done SB
+
+01:14:56 | Connection to client (127.0.0.1: 52733) closed
+
+01:15:14 | Client from 127.0.0.1: 52745 has connected
+01:15:14 | Adding username: 123
+
+01:15:14 | SB to <socket.socket fd=524, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52745)>
+01:15:14 | done SB
+
+01:16:03 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:16:03 | client at <socket.socket fd=524, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52745)> Will be closed
+01:16:03 | 123 has left the chat
+01:16:03 | done SB
+
+01:16:03 | Connection to client (127.0.0.1: 52745) closed
+
+01:16:11 | Client from 127.0.0.1: 52768 has connected
+01:16:11 | Adding username: 123
+
+01:16:11 | SB to <socket.socket fd=524, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52768)>
+01:16:11 | done SB
+
+01:17:03 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:17:03 | client at <socket.socket fd=524, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52768)> Will be closed
+01:17:03 | 123 has left the chat
+01:17:03 | done SB
+
+01:17:03 | Connection to client (127.0.0.1: 52768) closed
+
+01:18:21 | Client from 127.0.0.1: 52807 has connected
+01:18:21 | Adding username: 123
+
+01:18:21 | SB to <socket.socket fd=540, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52807)>
+01:18:21 | done SB
+
+01:18:55 | Message: [b'123', b'gAAAAABljmTPhlFHMt0dMqSZMf0BQtNnytc5rZt6BK6rvZZPT7ku6xu2Yk9x6DyypgUICgRQgmHwr4PYDKsHZIsq5jVv_X-q7w==']
+01:18:55 | Message sent to 1/1 users
+
+01:18:59 | Message: [b'123', b'gAAAAABljmTTQEnyDy3I7lX9z18_WrjCYzg5NxEQ4n9JMvi5hp8XATZNTK0VQB7oAAsXUMunQoyRMSgOsEp8maFsiR1q7ZOmfw==']
+01:18:59 | Message sent to 1/1 users
+
+01:19:41 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:19:41 | client at <socket.socket fd=540, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52807)> Will be closed
+01:19:41 | 123 has left the chat
+01:19:41 | done SB
+
+01:19:41 | Connection to client (127.0.0.1: 52807) closed
+
+01:20:30 | Client from 127.0.0.1: 52835 has connected
+01:20:30 | Adding username: 123
+
+01:20:30 | SB to <socket.socket fd=464, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52835)>
+01:20:30 | done SB
+
+01:20:33 | Message: [b'123', b'gAAAAABljmUxfP_BDAmGr2elLR7TdnHxIqmGvHp9IclyEnonk-HMmeNlzZoVez8oxNQJkEoFNDk2O2S0XsR6F_0qW9wkd4Fusg==']
+01:20:33 | Message sent to 1/1 users
+
+01:20:37 | Key Warned 123
+01:21:51 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:21:51 | client at <socket.socket fd=464, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52835)> Will be closed
+01:21:51 | 123 has left the chat
+01:21:51 | done SB
+
+01:21:51 | Connection to client (127.0.0.1: 52835) closed
+
+01:21:59 | Client from 127.0.0.1: 52860 has connected
+01:21:59 | Adding username: 123
+
+01:21:59 | SB to <socket.socket fd=540, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52860)>
+01:21:59 | done SB
+
+01:22:19 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:22:19 | client at <socket.socket fd=540, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52860)> Will be closed
+01:22:19 | 123 has left the chat
+01:22:19 | done SB
+
+01:22:19 | Connection to client (127.0.0.1: 52860) closed
+
+01:22:27 | Client from 127.0.0.1: 52883 has connected
+01:22:27 | Adding username: 123
+
+01:22:28 | SB to <socket.socket fd=532, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52883)>
+01:22:28 | done SB
+
+01:22:34 | Message: [b'123', b'gAAAAABljmWqUivmDcZFMU4yZEAFtL4sPieJTJcRfk2wLq49WR2MhNRQjgjmyefnGYDjGKBZmA5LZIRtMfOaD1t-I7_z4x1UBg==']
+01:22:34 | Message sent to 1/1 users
+
+01:22:39 | Message: [b'123', b'gAAAAABljmWvZmg3kpGGZfUu6ytmRNrv37_rYMaGBHLqm_NCHghiIaAnorJZlymQan_kmDAkI4zyw6zaywhutICHABC0Z1vMrA==']
+01:22:39 | Message sent to 1/1 users
+
+01:22:48 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:22:48 | client at <socket.socket fd=532, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52883)> Will be closed
+01:22:48 | 123 has left the chat
+01:22:48 | done SB
+
+01:22:48 | Connection to client (127.0.0.1: 52883) closed
+
+01:24:18 | Client from 127.0.0.1: 52928 has connected
+01:24:18 | Adding username: 123
+
+01:24:19 | SB to <socket.socket fd=548, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52928)>
+01:24:19 | done SB
+
+01:24:23 | Message: [b'123', b'gAAAAABljmYWlQzjRKd8b_ZRwqLHVmy0OxyHdDAhTdfXf6W7gKzHrCcrPauukq9T5LlpXcUolmmPOpl0IdkLWjT3c168QT1XZA==']
+01:24:23 | Message sent to 1/1 users
+
+01:24:32 | Client from 127.0.0.1: 52932 has connected
+01:24:32 | Adding username: 1234
+
+01:24:32 | SB to <socket.socket fd=548, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52928)>
+01:24:32 | SB to <socket.socket fd=536, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52932)>
+01:24:32 | done SB
+
+01:24:35 | Message: [b'1234', b'gAAAAABljmYjCHXTpbfRbJVI6i0L8wAJrqVzz033FFOxz-NuAwquttp7QFKfzLDURuO6DXcQs9rgCRlfcE-4CtXJweBLm7-L5g==']
+01:24:35 | Message sent to 2/2 users
+
+01:25:50 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:25:50 | client at <socket.socket fd=548, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52928)> Will be closed
+01:25:50 | 123 has left the chat
+01:25:50 | SB to <socket.socket fd=536, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52932)>
+01:25:50 | done SB
+
+01:25:50 | Connection to client (127.0.0.1: 52928) closed
+
+01:25:57 | Client from 127.0.0.1: 52965 has connected
+01:25:57 | Adding username: 123
+
+01:25:57 | SB to <socket.socket fd=536, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52932)>
+01:25:57 | SB to <socket.socket fd=572, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52965)>
+01:25:57 | done SB
+
+01:26:16 | Message: [b'1234', b'gAAAAABljmaIaYWRxUezvsPMQfTHotLSPP7DzOlT8ZaQrfcJqbJSVEj3CGrGba_gc4MDzqyOgR76OdvvMflVNnN5Hi7_jEij8g==']
+01:26:16 | Message sent to 2/2 users
+
+01:26:29 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:26:29 | client at <socket.socket fd=536, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52932)> Will be closed
+01:26:29 | 1234 has left the chat
+01:26:29 | SB to <socket.socket fd=572, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52965)>
+01:26:29 | done SB
+
+01:26:29 | Connection to client (127.0.0.1: 52932) closed
+
+01:26:30 | Handler Error: [WinError 10054] An existing connection was forcibly closed by the remote host
+01:26:30 | client at <socket.socket fd=572, family=2, type=1, proto=0, laddr=('127.0.0.1', 42323), raddr=('127.0.0.1', 52965)> Will be closed
+01:26:30 | 123 has left the chat
+01:26:30 | done SB
+
+01:26:30 | Connection to client (127.0.0.1: 52965) closed
+

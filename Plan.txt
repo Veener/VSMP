@@ -32,4 +32,4 @@ Step 8: Server Additions
 Step 9: Bugs AGAIN
     9a: Cant close during login                                 DONE    (V4.1/4.1)
 Step 10: Last Bits and Bobs
-    10a: Encrypt Saved Messages
+    10a: Encrypt Saved Messages                                 DONE    (V4.1/4.1)

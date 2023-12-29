@@ -202,13 +202,13 @@ class VSMPClient(tk.Tk):
             self.text_insert(self.message_log, "\n"+text, "R")
             self.text_insert(self.message_log, "\n"+line, "R")
             if self.saveT==True and username!="#":
-                self.saveMessage("#"+ text)
+                self.saveMessage("#"+ str(self.encrypt(text))+"\n")
         else:
             self.text_insert(self.message_log, "\n"+line)
             self.text_insert(self.message_log, "\n"+text)
             self.text_insert(self.message_log, "\n"+line)
             if self.saveT==True and username!="#":
-                self.saveMessage(text)
+                self.saveMessage(str(self.encrypt(text))+"\n")
         #print("dec: "+message)
 
     def enableSaving(self):
@@ -241,12 +241,14 @@ class VSMPClient(tk.Tk):
             #self.logprint(lines) #CHECK
             for line in lines:
                 if line[0]=="#":
-                    line.replace("#" ,"", 1)
+                    line=bytes(line[3:-1].encode("utf-8"))
                     #line[0]=""
                     print(line)
-                    self.printText("#",line, "R") 
+                    self.printText("#",self.decrypt(line), "R") 
                 else:
-                   self.printText("#",line) 
+                    line=bytes(line[2:-1].encode("utf-8"))
+                    print(line)
+                    self.printText("#",self.decrypt(line))
         
         
     #Server Communication+Handling
@@ -345,6 +347,7 @@ class VSMPClient(tk.Tk):
         except: #Big error, recieved false. key. Should message server and kick other guy. FOr now tho, break, then restart clinet. 
             self.skipError("Handling","You have recived a message with a non-compatable key." )
             self.serverMessage("KeyWarn", str(self.receivedL[0])[2:-1])
+            return "Loading Decrypt Error. Use Original Key"
             #This should be a skip, and lit user manually go back to login
             
     
