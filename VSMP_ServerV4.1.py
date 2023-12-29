@@ -109,7 +109,7 @@ def broadcast(messages,  username):
         logprint("Manual Break")
         serverRescue()
     finally:
-       logprint(f"Message sent to {x}/{len(usernameList)-3} users\n")
+       logprint(f"Message sent to {x}/{len(usernameList)-4} users\n")
  
 def serverInput():
     while True:
