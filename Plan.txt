@@ -10,7 +10,7 @@ Step 6: Bug fixes & Error Handling                              DONE    (V3.5/3.
             (try making a killed item in slot 2 or send       
             closed or something so that the server kills
             it. Maybe that will help.)
-    6b: Any looping Bugs                                        FIX PLS    X(V3.5/3.4)        
+    6b: Any looping Bugs                                        FIX PLS    X(V3.5/3.4)????        
         Client Loops with blank messge(When same user, find root)                                     
     6c: Server User Handling, confirm login.                    DONE    (V3.4/3.3)
     6d: inform/warn both                                        DONE    (V3.5/3.4)
@@ -19,15 +19,17 @@ Step 6: Bug fixes & Error Handling                              DONE    (V3.5/3.
         (disc client, close, recconnect)
     6f: Client X Close not close fully                          DONE    (V3.5/3.4)
 Step 7: Client Additions
-    7a: Add back Button(to login)
+    7a: Add back Button(to login)                               DONE    (V4.0/4.1)
     7b: Join and leave messages                                 DONE    (V4.0/4.1)
-    7c: You are chatting With(X, Y, Z)
-    7d: Clean, more functions(close, etc.)
-    7e: Save+Load Chat history
-    7f: Print Cleanup and Logging
+    7c: You are chatting With(X, Y, Z)                          DONE    (V4.0/4.1)
+    7d: Clean, more functions(close, etc.)                      DONE    (V4.0/4.1)
+    7e: Save+Load Chat history                                  DONE    (V4.0/4.1)
+    7f: Print Cleanup and Logging                               DONE    (V4.0/4.0)
 Step 8: Server Additions
     8a: 2nd thread for terminal input commands                  DONE    (V4.0/4.0)
         (client list, serverRescue, kick,  message, etc. )        
     8b: Print Cleanup and Logging                               DONE    (V4.0/4.0)
 Step 9: Bugs AGAIN
-    9a: Cant close during login
+    9a: Cant close during login                                 DONE    (V4.1/4.1)
+Step 10: Last Bits and Bobs
+    10a: Encrypt Saved Messages

@@ -9,13 +9,13 @@ import socket
 import time
 import datetime
 import os
+import sys
 
 from threading import Thread
 
 class VSMPClient(tk.Tk):
     def __init__(self, username, keyWord, host, port):
             super().__init__()
-            print(tk.TkVersion)
             self.title("VSMP")
             #self.iconbitmap("D:/SpaceShuttle.ico")
             self.attributes("-topmost", 1)
@@ -121,7 +121,7 @@ class VSMPClient(tk.Tk):
         self.restart_button = tk.Button(self.topbarFrame, text="Restart", padx=5, pady=5, command=lambda: self.restartClient("Manual", "Client Restarted by User"))
         self.restart_button.grid(row=0, column=0, sticky="we")
         
-        self.greeting = tk.Label(self.topbarFrame,  text=f"YOU ARE CHATTING WITH:{self.username}")
+        self.greeting = tk.Label(self.topbarFrame,  text=f"YOU ARE CHATTING AS:{self.username}")
         self.greeting.grid(row=0, column=1, sticky="we")
         
         self.save_button = tk.Button(self.topbarFrame, text="Save", padx=5, pady=5,bg="red", command=lambda: self.enableSaving())
@@ -151,12 +151,7 @@ class VSMPClient(tk.Tk):
         self.greeting.grid(column=2, row=0, columnspan=4, sticky=tk.N, pady=10)
         self.save_button.grid(column=6, row=0, columnspan=1, sticky=tk.N, pady=10)
         self.load_button.grid(column=7, row=0, columnspan=1, sticky=tk.N, pady=10)"""
-        
-        
-        #print("it ran")
-        
-                #self.recieve_text()
-                
+                        
     def serverConnect(self):
         self.c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.c.connect((self.host, self.port))
@@ -164,7 +159,7 @@ class VSMPClient(tk.Tk):
         #print("listening")
         self.listenThread.start()
         #print("sending") 
-        print(f"Connected to Server at {self.host}: {self.port}")
+        self.logprint(f"Connected to Server at {self.host}: {self.port}")
         self.serverMessage("username", self.username)
         #self.sendData("username", bytes(self.username.encode("utf-8")))
  
@@ -201,18 +196,18 @@ class VSMPClient(tk.Tk):
         #print("PRINTED???")
         line="-------------------------------"
         text=username+": "+ message
-        print(f"ptext {text}")
+        #self.logprint(f"ptext {text}") #CHECK
         if side=="R":
             self.text_insert(self.message_log, "\n"+line, "R")
             self.text_insert(self.message_log, "\n"+text, "R")
             self.text_insert(self.message_log, "\n"+line, "R")
-            if self.saveT==True:
-                self.saveMessage("\0"+ text)
+            if self.saveT==True and username!="#":
+                self.saveMessage("#"+ text)
         else:
             self.text_insert(self.message_log, "\n"+line)
             self.text_insert(self.message_log, "\n"+text)
             self.text_insert(self.message_log, "\n"+line)
-            if self.saveT==True:
+            if self.saveT==True and username!="#":
                 self.saveMessage(text)
         #print("dec: "+message)
 
@@ -223,35 +218,35 @@ class VSMPClient(tk.Tk):
         elif self.saveT==False:
             self.saveT=True
             self.save_button.configure(bg="green")
-        print(f"saving is now {self.saveT}")
+        self.logprint(f"Saving is now {self.saveT}")
     
     def saveMessage(self, message):
         cdate=datetime.date.today()
     
         fdate = cdate.strftime("%m-%d-%Y")
 
-        print("Message saving")
+        #print("Message saving")
         with open(f'SavedMessages/{fdate}--{self.username}.txt', 'a') as file:
             file.write(f"{message}")
     
     def loadMessages(self):
+        self.logprint("Loading Messages")
         cdate=datetime.date.today()
         dash="-------------------------------"
         fdate = cdate.strftime("%m-%d-%Y")
 
-        print("Message loading")
+        #print("Message loading")
         with open(f'SavedMessages/{fdate}--{self.username}.txt', 'r') as file:
             lines=file.readlines()
-            print(lines)
+            #self.logprint(lines) #CHECK
             for line in lines:
-                if line[0]=="\0":
-                    line.replace("\0" ,"", 1)
+                if line[0]=="#":
+                    line.replace("#" ,"", 1)
+                    #line[0]=""
                     print(line)
-                    self.text_insert(self.message_log, "\n"+dash, "R")
-                    self.text_insert(self.message_log, "\n"+str(line), "R")
-                    self.text_insert(self.message_log, "\n"+dash, "R")
+                    self.printText("#",line, "R") 
                 else:
-                   self.printText("Loaded Message",line) 
+                   self.printText("#",line) 
         
         
     #Server Communication+Handling
@@ -267,9 +262,10 @@ class VSMPClient(tk.Tk):
                 if str(self.received)[2]=="#":
                     self.text_insert(self.message_log, f"\n{str(self.received)[3:-1]}") 
                 else:
+                    self.logprint("Recieving a Message")
                     self.receivedL=self.received.split(b"\0")
-                    print(self.received)
-                    print(f"Bytes received: {self.received}")
+                    #self.logprint(self.received) #CHECK
+                    #self.logprint(f"Bytes received: {self.received}") #CHECK
                     #print(self.receivedL)
                     if self.username!=str(self.receivedL[0])[2:-1]:
                         uname=str(self.receivedL[0])[2:-1]
@@ -287,37 +283,30 @@ class VSMPClient(tk.Tk):
                 break
             except Exception as e:  #Print error and Break. #Should run a server close func
                 self.closeClient("Client", e)
-                #print(f"ClientSide error: {e}")
                 break
-        print("NO WHILE")
+        self.logprint("NO WHILE")
             
     def sendData(self, username, data):
-        """dataL2=data.split("|")
-        dataL2.insert(0, username.)
-        print(dataL2)
-        dataL=[]
-        for x in dataL2:
-            dataL.append(username.encode("utf-8"))"""
-
+        self.logprint("Sending a Message")
         dataL=[]
         dataL.append(username.encode("utf-8"))  
         send_this=b""
         
         if isinstance(data, list):
-            print("data sent is list")
+            #self.logprint("data sent is list")
             send_this += username.encode("utf-8")
             send_this += b"\0"
             for x in data:
                 send_this += x
                 send_this += b"\0" #swap and remove that null bite delete
         else:
-            print("data sent is bytes")
+            #self.logprint("data sent is bytes") #CHECK
             dataL.append(data)
-            print(dataL)
+            #self.logprint(dataL) #CHECK
             for x in dataL:
                 send_this += x
                 send_this += b"\0" #swap and remove that null bite delete
-        print(f"Bytes Sent: {send_this}")
+        #self.logprint(f"Bytes Sent: {send_this}") #CHECK
         try: 
             self.c.send(send_this)
         except: #prints dissdconetted error. On next send, should restart client
@@ -338,7 +327,6 @@ class VSMPClient(tk.Tk):
     def encrypt(self, message):
         fkey=self.gen_key(self.keyWord)
         encMessage = fkey.encrypt(message.encode())
-        #print(self.fkey.decrypt(encMessage).decode())
         return encMessage
     
     def decrypt(self, encMessage):
@@ -348,7 +336,7 @@ class VSMPClient(tk.Tk):
 
         # Check if encMessage has the correct structure
         if len(encMessage) < 32:
-            print(encMessage)
+            self.logprint(encMessage) #CHECK
             raise ValueError("Invalid Fernet token length")
         fkey=self.gen_key(self.keyWord)
         try:
@@ -367,23 +355,36 @@ class VSMPClient(tk.Tk):
 
     def closeClient(self, type, error):
         try:
-            print(f"{type} Error: {error}. \nClosing Client")
+            self.logprint(f"{type} Error: {error}. \nClosing Client")
             self.text_insert(self.message_log, f"\n{type} Error: {error}. \nClosing Client")
             self.c.close()
         finally:
             self.destroy()
+            sys.exit()
 
     def restartClient(self, type, error):
-        print(f"{type} Error: {error}. \nRestarting Client")
+        self.logprint(f"{type} Error: {error}. \nRestarting Client")
         self.text_insert(self.message_log, f"\n{type} Error: {error}. \nRestarting Client")
         self.c.close()
         time.sleep(3)
         os.execl("C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/AppData/Local/Programs/Python/Python312/python.exe", "C:/Users/vinhe/Coding/VSMP/VSMP_ClientV4.1.py")
     
     def skipError(self, type, error):
-        print(f"{type} Error: {error}.")
+        self.logprint(f"{type} Error: {error}.")
         self.text_insert(self.message_log, f"\n{type} Error: {error}.")   
     
+    def logprint(self, message):
+        now = datetime.datetime.now()
+        t=now.strftime("%H:%M:%S")
+        cdate=datetime.date.today()
+        
+        fdate = cdate.strftime("%m-%d-%Y")
+
+        print(f"{t} | {message}")
+        """
+        with open(f'ServerLogs/{fdate}.txt', 'a') as file:
+            file.write(f"{t} | {message}\n")
+        """
 
 if __name__ == "__main__":
     vsmp = VSMPClient("Kevin2","Banana1", "127.0.0.1", 42323)
